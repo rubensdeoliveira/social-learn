@@ -4,6 +4,7 @@ import { Container, Image } from './styles'
 
 import Author from '../Author'
 import Comments from '../Comments'
+import AddComment from '../AddComment'
 
 import ImageStatic from '../../assets/teste.png'
 
@@ -21,6 +22,7 @@ const Post: React.FC<PostProps> = ({ comments }) => (
     <Image source={ImageStatic} />
     <Author email="jroliveirati@gmail.com" nickname="Junior" />
     <Comments comments={comments} />
+    <AddComment />
   </Container>
 )
 

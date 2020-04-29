@@ -16,7 +16,7 @@ const Comments: React.FC<CommentProps> = ({ comments }) => {
     <Container>
       {comments &&
         comments.map((comment) => (
-          <CommentContainer>
+          <CommentContainer key={comment.comment}>
             <Nickname>{comment.nickname}: </Nickname>
             <Comment>{comment.comment}</Comment>
           </CommentContainer>

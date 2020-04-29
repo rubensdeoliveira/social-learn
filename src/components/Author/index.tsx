@@ -1,7 +1,5 @@
 import React from 'react'
 
-// import { Gravatar } from 'react-native-gravatar'
-
 import { Container, GravatarImage, Nickname } from './styles'
 
 interface AuthorProps {
