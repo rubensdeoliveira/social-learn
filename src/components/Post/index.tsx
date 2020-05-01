@@ -15,15 +15,19 @@ interface CommentObject {
 
 interface PostProps {
   comments: CommentObject[]
+  email: string
+  nickname: string
 }
 
-const Post: React.FC<PostProps> = ({ comments }) => (
-  <Container>
-    <Image source={ImageStatic} />
-    <Author email="jroliveirati@gmail.com" nickname="Junior" />
-    <Comments comments={comments} />
-    <AddComment />
-  </Container>
-)
+const Post: React.FC<PostProps> = ({ comments, email, nickname }) => {
+  return (
+    <Container>
+      <Image source={ImageStatic} />
+      <Author email={email} nickname={nickname} />
+      <Comments comments={comments} />
+      <AddComment />
+    </Container>
+  )
+}
 
 export default Post
