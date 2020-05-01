@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Feed from '../pages/Feed'
+import AddPhoto from '../pages/AddPhoto'
+import Profile from '../pages/Profile'
 
 const Tab = createBottomTabNavigator()
 
@@ -34,8 +36,8 @@ const Routes: React.FC = () => (
     }}
   >
     <Tab.Screen name="Feed" component={Feed} />
-    <Tab.Screen name="AddPhoto" component={Feed} />
-    <Tab.Screen name="Profile" component={Feed} />
+    <Tab.Screen name="AddPhoto" component={AddPhoto} />
+    <Tab.Screen name="Profile" component={Profile} />
   </Tab.Navigator>
 )
 
