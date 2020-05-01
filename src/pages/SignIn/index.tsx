@@ -35,17 +35,12 @@ const SignIn: React.FC = () => {
         value={email}
         onChangeText={(emailText) => setEmail(emailText)}
       />
-      <Button>
-        <ButtonText onPress={login}>Login</ButtonText>
-      </Button>
-      <Button>
-        <ButtonText
-          onPress={() => {
-            console.log('test')
-          }}
-        >
-          Criar uma conta
-        </ButtonText>
+      <Button
+        onPress={() => {
+          console.log('test')
+        }}
+      >
+        Entrar
       </Button>
     </Container>
   )
