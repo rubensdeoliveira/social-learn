@@ -23,13 +23,17 @@ const SignIn: React.FC = () => {
       <Title>Faça seu login</Title>
 
       <Input
-        placeholder="Email"
+        name="email"
+        icon="mail"
+        placeholder="E-mail"
         autoFocus
         keyboardType="email-address"
         value={email}
         onChangeText={(emailText) => setEmail(emailText)}
       />
       <Input
+        name="password"
+        icon="lock"
         placeholder="Senha"
         secureTextEntry
         value={email}
