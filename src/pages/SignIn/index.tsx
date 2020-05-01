@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 
 import { Container, Input, Button, ButtonText } from './styles'
 
-const Login: React.FC = ({ navigation }) => {
+const SignIn: React.FC = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -41,4 +41,4 @@ const Login: React.FC = ({ navigation }) => {
   )
 }
 
-export default Login
+export default SignIn
