@@ -17,7 +17,7 @@ const AuthRoutes: React.FC = () => (
   <Auth.Navigator
     screenOptions={{
       headerShown: false,
-      cardStyle: { backgroundColor: '#ff6b6b' },
+      cardStyle: { backgroundColor: '#fafafa' },
     }}
   >
     <Auth.Screen name="SignIn" component={SignIn} />
@@ -45,7 +45,7 @@ const Routes: React.FC = () => (
       },
     })}
     tabBarOptions={{
-      activeTintColor: '#ff6b6b',
+      activeTintColor: '#db5960',
       inactiveTintColor: 'gray',
       showLabel: false,
     }}

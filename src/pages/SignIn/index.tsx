@@ -1,17 +1,27 @@
 import React, { useState, useCallback } from 'react'
+import { Image } from 'react-native'
 
-import { Container, Input, Button, ButtonText } from './styles'
+import Input from '../../components/Input'
+import Button from '../../components/Button'
 
-const SignIn: React.FC = ({ navigation }) => {
+import { Container, Title, ButtonText } from './styles'
+
+import logoImg from '../../assets/logo.png'
+
+const SignIn: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const login = useCallback(() => {
-    navigation.navigate('Profile')
+    console.log('test')
   }, [])
 
   return (
     <Container>
+      <Image source={logoImg} />
+
+      <Title>Faça seu login</Title>
+
       <Input
         placeholder="Email"
         autoFocus

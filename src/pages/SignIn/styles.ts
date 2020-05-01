@@ -6,10 +6,17 @@ export const Container = styled.View`
   justify-content: center;
 `
 
+export const Title = styled.Text`
+  font-family: 'Poppins-Bold';
+  font-size: 24px;
+  color: #333333;
+  margin: 64px 0 24px;
+`
+
 export const Input = styled.TextInput`
   margin-top: 20px;
   width: 90%;
-  background: #eee;
+  background: #fff;
   height: 40px;
   border-width: 1px;
   border-color: #eee;
