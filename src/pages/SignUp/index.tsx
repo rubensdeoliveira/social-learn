@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import {
   Image,
   View,
@@ -7,6 +7,8 @@ import {
   Platform,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { Form } from '@unform/mobile'
+import { FormHandles } from '@unform/core'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -19,6 +21,7 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const formRef = useRef<FormHandles>(null)
   const navigation = useNavigation()
 
   const login = useCallback(() => {
@@ -42,42 +45,38 @@ const SignUp: React.FC = () => {
             <View>
               <Title>Crie sua conta</Title>
             </View>
-
-            <Input
-              name="name"
-              icon="user"
-              placeholder="Nome"
-              autoFocus
-              keyboardType="email-address"
-              value={email}
-              onChangeText={(emailText) => setEmail(emailText)}
-            />
-
-            <Input
-              name="email"
-              icon="mail"
-              placeholder="E-mail"
-              keyboardType="email-address"
-              value={email}
-              onChangeText={(emailText) => setEmail(emailText)}
-            />
-
-            <Input
-              name="password"
-              icon="lock"
-              placeholder="Senha"
-              secureTextEntry
-              value={email}
-              onChangeText={(emailText) => setEmail(emailText)}
-            />
-
-            <Button
-              onPress={() => {
-                console.log('test')
+            <Form
+              ref={formRef}
+              onSubmit={(data) => {
+                console.log(data)
               }}
             >
-              Entrar
-            </Button>
+              <Input
+                name="name"
+                icon="user"
+                placeholder="Nome"
+                autoFocus
+                keyboardType="email-address"
+              />
+
+              <Input
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                keyboardType="email-address"
+              />
+
+              <Input
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                secureTextEntry
+              />
+
+              <Button onPress={() => formRef.current?.submitForm()}>
+                Cadastrar
+              </Button>
+            </Form>
 
             <BackToSignIn onPress={() => navigation.navigate('SignIn')}>
               <BackToSignInText>voltar para login</BackToSignInText>

@@ -24,6 +24,7 @@
   "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
   "rules": {
     "semi": "off",
+    "@typescript-eslint/ban-types": "off",
     "react/jsx-curly-newline": "off",
     "prettier/prettier": "error",
     "react/jsx-one-expression-per-line": "off",

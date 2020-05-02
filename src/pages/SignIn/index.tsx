@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import {
   Image,
   View,
@@ -7,6 +7,8 @@ import {
   Platform,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { Form } from '@unform/mobile'
+import { FormHandles } from '@unform/core'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -25,10 +27,11 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const formRef = useRef<FormHandles>(null)
   const navigation = useNavigation()
 
-  const login = useCallback(() => {
-    console.log('test')
+  const handleSignIn = useCallback((data: Object) => {
+    console.log(data)
   }, [])
 
   return (
@@ -48,32 +51,30 @@ const SignIn: React.FC = () => {
             <Title>Faça seu login</Title>
           </View>
 
-          <Input
-            name="email"
-            icon="mail"
-            placeholder="E-mail"
-            autoFocus
-            keyboardType="email-address"
-            value={email}
-            onChangeText={(emailText) => setEmail(emailText)}
-          />
+          <Form ref={formRef} onSubmit={handleSignIn}>
+            <Input
+              name="email"
+              icon="mail"
+              placeholder="E-mail"
+              autoFocus
+              keyboardType="email-address"
+            />
 
-          <Input
-            name="password"
-            icon="lock"
-            placeholder="Senha"
-            secureTextEntry
-            value={email}
-            onChangeText={(emailText) => setEmail(emailText)}
-          />
+            <Input
+              name="password"
+              icon="lock"
+              placeholder="Senha"
+              secureTextEntry
+            />
 
-          <Button
-            onPress={() => {
-              console.log('test')
-            }}
-          >
-            Entrar
-          </Button>
+            <Button
+              onPress={() => {
+                formRef.current?.submitForm()
+              }}
+            >
+              Entrar
+            </Button>
+          </Form>
 
           <CreateAccount onPress={() => navigation.navigate('SignUp')}>
             <ButtonText>Criar uma conta</ButtonText>
