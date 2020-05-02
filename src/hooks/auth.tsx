@@ -61,7 +61,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     )
 
     if (response.data.localId) {
-      const responseUser = await api.get(`users/${response.data.localId}.json`)
+      const responseUser = await api.get(`/users/${response.data.localId}.json`)
 
       const user = { email, ...responseUser.data }
       const token = 'mudeissodepois'

@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-
 import {
   Container,
   GravatarImage,
@@ -8,11 +7,14 @@ import {
   Button,
   ButtonText,
 } from './styles'
+import { useAuth } from '../../hooks/auth'
 
 const Profile: React.FC = () => {
+  const { signOut } = useAuth()
+
   const logout = useCallback(() => {
-    console.log('ok')
-  }, [])
+    signOut()
+  }, [signOut])
 
   return (
     <Container>
@@ -21,7 +23,7 @@ const Profile: React.FC = () => {
       />
       <Nickname>Fulano de tal</Nickname>
       <Email>fulanodetal@gmail.com</Email>
-      <Button>
+      <Button onPress={logout}>
         <ButtonText>Sair</ButtonText>
       </Button>
     </Container>
