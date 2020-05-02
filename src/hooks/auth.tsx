@@ -8,7 +8,7 @@ import React, {
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import api from '../services/api'
-import { AUTH_BASE_URL, API_KEY } from '../env'
+import { AUTH_BASE_URL, API_KEY } from '../env.js'
 
 interface AuthState {
   token: string
@@ -25,11 +25,12 @@ interface AuthContextData {
   loading: boolean
   signIn(credentials: SingInCredentials): Promise<void>
   signOut(): void
+  token: string
 }
 
-export const AuthContext = createContext<AuthContextData>({} as AuthContextData)
+const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
-export const AuthProvider: React.FC = ({ children }) => {
+const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState)
   const [loading, setLoading] = useState(true)
 
@@ -61,10 +62,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     )
 
     if (response.data.localId) {
-      const responseUser = await api.get(`/users/${response.data.localId}.json`)
+      const responseUser = await api.get(`users/${response.data.localId}.json`)
 
       const user = { email, ...responseUser.data }
-      const token = 'mudeissodepois'
+      const token = response.data.idToken
 
       await AsyncStorage.multiSet([
         ['@GoBarber:token', token],
@@ -82,13 +83,15 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, token: data.token, loading, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
 
-export const useAuth = (): AuthContextData => {
+const useAuth = (): AuthContextData => {
   const context = useContext(AuthContext)
 
   if (!context) {
@@ -98,4 +101,4 @@ export const useAuth = (): AuthContextData => {
   return context
 }
 
-export default AuthContext
+export { AuthProvider, useAuth }

@@ -26,11 +26,13 @@ import logoImg from '../../assets/logo.png'
 
 interface SignUpFormData {
   name: string
+  nickname: string
   email: string
   password: string
 }
 
 const SignUp: React.FC = () => {
+  const nicknameInputRef = useRef<TextInput>(null)
   const emailInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
 
@@ -44,7 +46,10 @@ const SignUp: React.FC = () => {
         formRef.current?.setErrors({})
 
         const schema = Yup.object().shape({
-          name: Yup.string().min(6, 'Nome deve ter no mínimo 6 dígitos'),
+          name: Yup.string().min(4, 'Nome deve ter no mínimo 4 dígitos'),
+          nickname: Yup.string()
+            .min(4, 'Nome deve ter no mínimo 4 dígitos')
+            .max(20, 'Nome de usuário deve ter no máximo 20 digitos'),
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('E-mail inválido'),
@@ -67,6 +72,7 @@ const SignUp: React.FC = () => {
         if (response.data.localId) {
           await api.put(`/users/${response.data.localId}.json`, {
             name: data.name,
+            nickname: data.nickname,
           })
         }
 
@@ -117,6 +123,19 @@ const SignUp: React.FC = () => {
                 name="name"
                 icon="user"
                 placeholder="Nome"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  nicknameInputRef.current?.focus()
+                }}
+              />
+
+              <Input
+                ref={nicknameInputRef}
+                autoCapitalize="none"
+                autoCorrect={false}
+                name="nickname"
+                icon="user"
+                placeholder="Nome de Usuário"
                 returnKeyType="next"
                 onSubmitEditing={() => {
                   emailInputRef.current?.focus()

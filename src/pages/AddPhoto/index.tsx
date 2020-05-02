@@ -4,6 +4,7 @@ import { Alert, ScrollView } from 'react-native'
 import axios from 'axios'
 import api from '../../services/api'
 import { FIREBASE_STORAGE_URL } from '../../env.js'
+import { useAuth } from '../../hooks/auth'
 
 import {
   Container,
@@ -23,6 +24,8 @@ interface ImageProps {
 
 const AddPhoto: React.FC = () => {
   const [image, setImage] = useState({} as ImageProps)
+
+  const { token } = useAuth()
 
   const pickImage = useCallback(() => {
     ImagePicker.showImagePicker(
@@ -50,9 +53,11 @@ const AddPhoto: React.FC = () => {
         },
       })
 
+      console.log(responseImage)
+
       const post = { image: responseImage.data.imageUrl }
 
-      await api.post('posts.json', post)
+      await api.post(`posts.json?auth=${token}`, post)
     } catch (err) {
       console.log(err)
     }
