@@ -6,7 +6,9 @@ export const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background: #f5fcff;
+  background: #fafafa;
 `
 
-export const List = styled(FlatList)``
+export const List = styled(FlatList)`
+  margin-top: 10px;
+`

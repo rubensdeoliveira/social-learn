@@ -4,6 +4,8 @@ import { Container, List } from './styles'
 
 import Post from '../../components/Post'
 
+import Header from '../../components/Header'
+
 interface CommentsData {
   nickname: string
   comment: string
@@ -58,6 +60,7 @@ const Feed: React.FC = () => {
 
   return (
     <Container>
+      <Header />
       <List
         data={posts}
         keyExtractor={(item) => `${item.id}`}

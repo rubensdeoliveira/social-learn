@@ -14,7 +14,7 @@ import AddPhoto from '../pages/AddPhoto'
 const Tab = createBottomTabNavigator()
 
 const TabRouter: React.FC = () => {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
 
   return (
     <Tab.Navigator

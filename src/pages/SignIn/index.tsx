@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import {
   Image,
   View,
@@ -35,9 +35,6 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
   const passwordInputRef = useRef<TextInput>(null)
 
   const formRef = useRef<FormHandles>(null)
