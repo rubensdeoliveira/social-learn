@@ -6,7 +6,9 @@ import React, {
   useEffect,
 } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
+import axios from 'axios'
 import api from '../services/api'
+import { AUTH_BASE_URL, API_KEY } from '../env'
 
 interface AuthState {
   token: string
@@ -49,19 +51,28 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [])
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('sessions', {
-      email,
-      password,
-    })
+    const response = await axios.post(
+      `${AUTH_BASE_URL}/verifyPassword?key=${API_KEY}`,
+      {
+        email,
+        password,
+        returnSecureToken: true,
+      },
+    )
 
-    const { token, user } = response.data
+    if (response.data.localId) {
+      const responseUser = await api.get(`users/${response.data.localId}.json`)
 
-    await AsyncStorage.multiSet([
-      ['@GoBarber:token', token],
-      ['@GoBarber:user', JSON.stringify(user)],
-    ])
+      const user = { email, ...responseUser.data }
+      const token = 'mudeissodepois'
 
-    setData({ token, user })
+      await AsyncStorage.multiSet([
+        ['@GoBarber:token', token],
+        ['@GoBarber:user', JSON.stringify(user)],
+      ])
+
+      setData({ token, user })
+    }
   }, [])
 
   const signOut = useCallback(async () => {

@@ -12,8 +12,11 @@ import { useNavigation } from '@react-navigation/native'
 import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
 import * as Yup from 'yup'
-import getValidationErrors from '../../utils/getValidationErrors'
+import axios from 'axios'
+import api from '../../services/api'
+import { AUTH_BASE_URL, API_KEY } from '../../env.js'
 
+import getValidationErrors from '../../utils/getValidationErrors'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 
@@ -52,7 +55,20 @@ const SignUp: React.FC = () => {
           abortEarly: false,
         })
 
-        // await api.post('/users', data)
+        const response = await axios.post(
+          `${AUTH_BASE_URL}/signupNewUser?key=${API_KEY}`,
+          {
+            email: data.email,
+            password: data.password,
+            returnSecureToken: true,
+          },
+        )
+
+        if (response.data.localId) {
+          await api.put(`/users/${response.data.localId}.json`, {
+            name: data.name,
+          })
+        }
 
         Alert.alert(
           'Cadastro realizado com sucesso!',

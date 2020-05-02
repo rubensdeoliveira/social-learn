@@ -1,7 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import ImagePicker from 'react-native-image-picker'
-
 import { Alert, ScrollView } from 'react-native'
+import axios from 'axios'
+import api from '../../services/api'
+import { FIREBASE_STORAGE_URL } from '../../env.js'
+
 import {
   Container,
   Title,
@@ -13,8 +16,13 @@ import {
   SaveButtonText,
 } from './styles'
 
+interface ImageProps {
+  base64: string
+  uri: string
+}
+
 const AddPhoto: React.FC = () => {
-  const [image, setImage] = useState({})
+  const [image, setImage] = useState({} as ImageProps)
 
   const pickImage = useCallback(() => {
     ImagePicker.showImagePicker(
@@ -32,7 +40,22 @@ const AddPhoto: React.FC = () => {
   }, [])
 
   const save = useCallback(async () => {
-    Alert.alert('Image adicionada!')
+    try {
+      const responseImage = await axios({
+        url: 'uploadImage',
+        baseURL: FIREBASE_STORAGE_URL,
+        method: 'post',
+        data: {
+          image: image.base64,
+        },
+      })
+
+      const post = { image: responseImage.data.imageUrl }
+
+      await api.post('posts.json', post)
+    } catch (err) {
+      console.log(err)
+    }
   }, [])
 
   return (
