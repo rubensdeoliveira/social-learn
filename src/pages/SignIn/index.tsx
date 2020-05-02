@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -24,6 +25,8 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const navigation = useNavigation()
+
   const login = useCallback(() => {
     console.log('test')
   }, [])
@@ -32,6 +35,7 @@ const SignIn: React.FC = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      enabled
     >
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -71,13 +75,13 @@ const SignIn: React.FC = () => {
             Entrar
           </Button>
 
-          <ForgotPassword>
+          <CreateAccount onPress={() => navigation.navigate('SignUp')}>
             <ButtonText>Criar uma conta</ButtonText>
-          </ForgotPassword>
-
-          <CreateAccount>
-            <ButtonText>Esqueci minha senha</ButtonText>
           </CreateAccount>
+
+          <ForgotPassword>
+            <ButtonText>Esqueci minha senha</ButtonText>
+          </ForgotPassword>
         </Container>
       </ScrollView>
     </KeyboardAvoidingView>

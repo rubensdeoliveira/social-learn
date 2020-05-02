@@ -15,11 +15,11 @@ export const Title = styled.Text`
 `
 
 export const ForgotPassword = styled.TouchableOpacity`
-  margin-top: 24px;
+  margin-top: 10px;
 `
 
 export const CreateAccount = styled.TouchableOpacity`
-  margin-top: 10px;
+  margin-top: 24px;
 `
 
 export const ButtonText = styled.Text`

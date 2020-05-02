@@ -1,43 +1,91 @@
 import React, { useState, useCallback } from 'react'
+import {
+  Image,
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
-import { Container, Input, Button, ButtonText } from './styles'
+import Input from '../../components/Input'
+import Button from '../../components/Button'
 
-const SignUp: React.FC = ({ navigation }) => {
+import { Container, Title, BackToSignIn, BackToSignInText } from './styles'
+
+import logoImg from '../../assets/logo.png'
+
+const SignUp: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const navigation = useNavigation()
+
   const login = useCallback(() => {
-    navigation.navigate('Profile')
+    console.log('test')
   }, [])
 
   return (
-    <Container>
-      <Input
-        placeholder="Email"
-        autoFocus
-        keyboardType="email-address"
-        value={email}
-        onChangeText={(emailText) => setEmail(emailText)}
-      />
-      <Input
-        placeholder="Senha"
-        secureTextEntry
-        value={email}
-        onChangeText={(emailText) => setEmail(emailText)}
-      />
-      <Button>
-        <ButtonText onPress={login}>Login</ButtonText>
-      </Button>
-      <Button>
-        <ButtonText
-          onPress={() => {
-            console.log('test')
-          }}
+    <>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled
+      >
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flex: 1 }}
         >
-          Criar uma conta
-        </ButtonText>
-      </Button>
-    </Container>
+          <Container>
+            <Image source={logoImg} />
+
+            <View>
+              <Title>Crie sua conta</Title>
+            </View>
+
+            <Input
+              name="name"
+              icon="user"
+              placeholder="Nome"
+              autoFocus
+              keyboardType="email-address"
+              value={email}
+              onChangeText={(emailText) => setEmail(emailText)}
+            />
+
+            <Input
+              name="email"
+              icon="mail"
+              placeholder="E-mail"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={(emailText) => setEmail(emailText)}
+            />
+
+            <Input
+              name="password"
+              icon="lock"
+              placeholder="Senha"
+              secureTextEntry
+              value={email}
+              onChangeText={(emailText) => setEmail(emailText)}
+            />
+
+            <Button
+              onPress={() => {
+                console.log('test')
+              }}
+            >
+              Entrar
+            </Button>
+
+            <BackToSignIn onPress={() => navigation.navigate('SignIn')}>
+              <BackToSignInText>voltar para login</BackToSignInText>
+            </BackToSignIn>
+          </Container>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   )
 }
 
