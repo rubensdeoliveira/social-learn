@@ -1,13 +1,7 @@
 import React, { useCallback } from 'react'
-import {
-  Container,
-  GravatarImage,
-  Username,
-  Email,
-  Button,
-  ButtonText,
-} from './styles'
+import { Container, GravatarImage, Username, Email } from './styles'
 import { useAuth } from '../../hooks/auth'
+import Button from '../../components/Button'
 
 interface UserData {
   email: string
@@ -18,9 +12,7 @@ interface UserData {
 const Profile: React.FC = () => {
   const { signOut, user } = useAuth()
 
-  console.log(user)
-
-  const logout = useCallback(() => {
+  const handleLogout = useCallback(() => {
     signOut()
   }, [signOut])
 
@@ -29,9 +21,7 @@ const Profile: React.FC = () => {
       <GravatarImage options={{ email: user.email, secure: true }} />
       <Username>{user.username}</Username>
       <Email>{user.username}</Email>
-      <Button onPress={logout}>
-        <ButtonText>Sair</ButtonText>
-      </Button>
+      <Button onPress={handleLogout}>Sair</Button>
     </Container>
   )
 }

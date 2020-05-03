@@ -16,4 +16,5 @@ export const ButtonText = styled.Text`
   font-family: 'Poppins-Bold';
   color: #fff;
   font-size: 18px;
+  margin-top: 4px;
 `

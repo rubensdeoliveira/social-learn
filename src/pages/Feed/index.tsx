@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Alert } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import api from '../../services/api'
 
 import Post from '../../components/Post'
@@ -23,8 +24,9 @@ interface PostData {
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<PostData[]>([])
 
+  const navigation = useNavigation()
+
   useEffect(() => {
-    console.log('carregou')
     const loadPosts = async (): Promise<void> => {
       try {
         const response = await api.get('posts.json')
@@ -41,6 +43,8 @@ const Feed: React.FC = () => {
 
         setPosts([...postsToAdd])
       } catch {
+        setPosts([])
+
         Alert.alert(
           'Erro ao carregar posts',
           'Não foi possível carregar os posts',
@@ -48,8 +52,10 @@ const Feed: React.FC = () => {
       }
     }
 
-    loadPosts()
-  }, [])
+    navigation.addListener('focus', () => {
+      loadPosts()
+    })
+  }, [navigation])
 
   return (
     <Container>
