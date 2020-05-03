@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { Container, CommentContainer, Nickname, Comment } from './styles'
+import { Container, CommentContainer, Username, Comment } from './styles'
 
 interface CommentObject {
-  nickname: string
+  username: string
   comment: string
 }
 
@@ -17,7 +17,7 @@ const Comments: React.FC<CommentProps> = ({ comments }) => {
       {comments &&
         comments.map((comment) => (
           <CommentContainer key={comment.comment}>
-            <Nickname>{comment.nickname}: </Nickname>
+            <Username>{comment.username}: </Username>
             <Comment>{comment.comment}</Comment>
           </CommentContainer>
         ))}

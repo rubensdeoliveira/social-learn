@@ -40,6 +40,7 @@ export const UserContainer = styled.View`
 
 export const Username = styled.Text`
   font-size: 10px;
+  font-family: 'Poppins-Regular';
   color: #bbb;
 `
 

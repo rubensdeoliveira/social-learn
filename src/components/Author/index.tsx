@@ -1,16 +1,16 @@
 import React from 'react'
 
-import { Container, GravatarImage, Nickname } from './styles'
+import { Container, GravatarImage, Username } from './styles'
 
 interface AuthorProps {
   email: string
-  nickname: string
+  username: string
 }
 
-const Author: React.FC<AuthorProps> = ({ email, nickname }) => (
+const Author: React.FC<AuthorProps> = ({ email, username }) => (
   <Container>
     <GravatarImage options={{ email, secure: true }} />
-    <Nickname>{nickname}</Nickname>
+    <Username>{username}</Username>
   </Container>
 )
 

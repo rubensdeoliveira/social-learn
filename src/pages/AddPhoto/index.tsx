@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import ImagePicker from 'react-native-image-picker'
 import { Alert, ScrollView } from 'react-native'
 import axios from 'axios'
+import { useNavigation } from '@react-navigation/native'
 import api from '../../services/api'
 import { FIREBASE_STORAGE_URL } from '../../env.js'
 import { useAuth } from '../../hooks/auth'
@@ -25,7 +26,8 @@ interface ImageProps {
 const AddPhoto: React.FC = () => {
   const [image, setImage] = useState({} as ImageProps)
 
-  const { token } = useAuth()
+  const { token, user } = useAuth()
+  const navigation = useNavigation()
 
   const pickImage = useCallback(() => {
     ImagePicker.showImagePicker(
@@ -53,13 +55,23 @@ const AddPhoto: React.FC = () => {
         },
       })
 
-      console.log(responseImage)
-
-      const post = { image: responseImage.data.imageUrl }
+      const post = {
+        image: responseImage.data.imageUrl,
+        email: user.email,
+        username: user.username,
+        created_at: new Date(),
+      }
 
       await api.post(`posts.json?auth=${token}`, post)
-    } catch (err) {
-      console.log(err)
+
+      Alert.alert('Sucesso', 'Pergunta criada com sucesso!')
+
+      navigation.navigate('Feed')
+    } catch {
+      Alert.alert(
+        'Erro ao criar pergunta',
+        'Não foi possível criar a pergunta, tente novamente',
+      )
     }
   }, [])
 

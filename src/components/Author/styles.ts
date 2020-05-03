@@ -14,7 +14,7 @@ export const GravatarImage = styled(Gravatar)`
   margin: 0 10px;
 `
 
-export const Nickname = styled.Text`
+export const Username = styled.Text`
   color: #444;
   margin: 10px 0;
   font-size: 15px;

@@ -10,7 +10,7 @@ export const CommentContainer = styled.View`
   margin-top: 5px;
 `
 
-export const Nickname = styled.Text`
+export const Username = styled.Text`
   margin-left: 5px;
   font-family: 'Poppins-Bold';
   color: #444;

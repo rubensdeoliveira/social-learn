@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import {
   Container,
   GravatarImage,
-  Nickname,
+  Username,
   Email,
   Button,
   ButtonText,
@@ -11,12 +11,14 @@ import { useAuth } from '../../hooks/auth'
 
 interface UserData {
   email: string
-  nickname: string
+  username: string
   name: string
 }
 
 const Profile: React.FC = () => {
   const { signOut, user } = useAuth()
+
+  console.log(user)
 
   const logout = useCallback(() => {
     signOut()
@@ -24,9 +26,9 @@ const Profile: React.FC = () => {
 
   return (
     <Container>
-      <GravatarImage options={{ email: user.name, secure: true }} />
-      <Nickname>{user.nickname}</Nickname>
-      <Email>{user.email}</Email>
+      <GravatarImage options={{ email: user.email, secure: true }} />
+      <Username>{user.username}</Username>
+      <Email>{user.username}</Email>
       <Button onPress={logout}>
         <ButtonText>Sair</ButtonText>
       </Button>

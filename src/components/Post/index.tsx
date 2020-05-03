@@ -6,24 +6,23 @@ import Author from '../Author'
 import Comments from '../Comments'
 import AddComment from '../AddComment'
 
-import ImageStatic from '../../assets/teste.png'
-
 interface CommentObject {
-  nickname: string
+  username: string
   comment: string
 }
 
 interface PostProps {
   comments: CommentObject[]
   email: string
-  nickname: string
+  username: string
+  image: string
 }
 
-const Post: React.FC<PostProps> = ({ comments, email, nickname }) => {
+const Post: React.FC<PostProps> = ({ comments, email, username, image }) => {
   return (
     <Container>
-      <Image source={ImageStatic} />
-      <Author email={email} nickname={nickname} />
+      <Image source={{ uri: image }} />
+      <Author email={email} username={username} />
       <Comments comments={comments} />
       <AddComment />
     </Container>

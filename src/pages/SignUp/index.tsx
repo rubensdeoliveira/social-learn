@@ -26,13 +26,13 @@ import logoImg from '../../assets/logo.png'
 
 interface SignUpFormData {
   name: string
-  nickname: string
+  username: string
   email: string
   password: string
 }
 
 const SignUp: React.FC = () => {
-  const nicknameInputRef = useRef<TextInput>(null)
+  const usernameInputRef = useRef<TextInput>(null)
   const emailInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
 
@@ -47,7 +47,7 @@ const SignUp: React.FC = () => {
 
         const schema = Yup.object().shape({
           name: Yup.string().min(4, 'Nome deve ter no mínimo 4 dígitos'),
-          nickname: Yup.string()
+          username: Yup.string()
             .min(4, 'Nome deve ter no mínimo 4 dígitos')
             .max(20, 'Nome de usuário deve ter no máximo 20 digitos'),
           email: Yup.string()
@@ -72,7 +72,7 @@ const SignUp: React.FC = () => {
         if (response.data.localId) {
           await api.put(`/users/${response.data.localId}.json`, {
             name: data.name,
-            nickname: data.nickname,
+            username: data.username,
           })
         }
 
@@ -125,15 +125,15 @@ const SignUp: React.FC = () => {
                 placeholder="Nome"
                 returnKeyType="next"
                 onSubmitEditing={() => {
-                  nicknameInputRef.current?.focus()
+                  usernameInputRef.current?.focus()
                 }}
               />
 
               <Input
-                ref={nicknameInputRef}
+                ref={usernameInputRef}
                 autoCapitalize="none"
                 autoCorrect={false}
-                name="nickname"
+                name="username"
                 icon="user"
                 placeholder="Nome de Usuário"
                 returnKeyType="next"

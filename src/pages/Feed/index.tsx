@@ -1,62 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Alert } from 'react-native'
+import api from '../../services/api'
+
+import Post from '../../components/Post'
+import Header from '../../components/Header'
 
 import { Container, List } from './styles'
 
-import Post from '../../components/Post'
-
-import Header from '../../components/Header'
-
 interface CommentsData {
-  nickname: string
+  username: string
   comment: string
 }
 
 interface PostData {
   id: number
-  nickname: string
+  username: string
   email: string
   image: string
   comments: CommentsData[]
 }
 
 const Feed: React.FC = () => {
-  const [posts] = useState([
-    {
-      id: Math.random(),
-      nickname: 'Rafael',
-      email: 'rafael@gmail.com',
-      image: '',
-      comments: [{ nickname: 'luisa', comment: 'legal' }],
-    },
-    {
-      id: Math.random(),
-      nickname: 'Julia',
-      email: 'julia@gmail.com',
-      image: '',
-      comments: [{ nickname: 'junior', comment: 'gostosa' }],
-    },
-    {
-      id: Math.random(),
-      nickname: 'Julia',
-      email: 'julia@gmail.com',
-      image: '',
-      comments: [{ nickname: 'junior', comment: 'gostosa' }],
-    },
-    {
-      id: Math.random(),
-      nickname: 'Julia',
-      email: 'julia@gmail.com',
-      image: '',
-      comments: [{ nickname: 'junior', comment: 'gostosa' }],
-    },
-    {
-      id: Math.random(),
-      nickname: 'Julia',
-      email: 'julia@gmail.com',
-      image: '',
-      comments: [{ nickname: 'junior', comment: 'gostosa' }],
-    },
-  ])
+  const [posts, setPosts] = useState<PostData[]>([])
+
+  useEffect(() => {
+    console.log('carregou')
+    const loadPosts = async (): Promise<void> => {
+      try {
+        const response = await api.get('posts.json')
+
+        const postsObj = response.data
+        const postsKeys = Object.keys(postsObj)
+        const postsToAdd: PostData[] = []
+
+        postsKeys.forEach((postKey) => {
+          postsToAdd.push({ id: postKey, ...postsObj[postKey] })
+        })
+
+        postsToAdd.reverse()
+
+        setPosts([...postsToAdd])
+      } catch {
+        Alert.alert(
+          'Erro ao carregar posts',
+          'Não foi possível carregar os posts',
+        )
+      }
+    }
+
+    loadPosts()
+  }, [])
 
   return (
     <Container>
@@ -68,7 +61,8 @@ const Feed: React.FC = () => {
           <Post
             comments={item.comments}
             email={item.email}
-            nickname={item.nickname}
+            username={item.username}
+            image={item.image}
           />
         )}
       />
