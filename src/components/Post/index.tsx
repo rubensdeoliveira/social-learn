@@ -14,24 +14,31 @@ interface CommentObject {
 
 interface PostProps {
   comments: CommentObject[]
-  email: string
+  user: UserData
+  question: QuestionData
+  created_at: string
+}
+
+interface UserData {
   username: string
+  email: string
+}
+
+interface QuestionData {
   image: string
-  create_at: string
 }
 
 const Post: React.FC<PostProps> = ({
-  image,
+  question,
   created_at,
-  username,
-  email,
+  user,
   comments,
 }) => {
   return (
     <Container>
-      <Image source={{ uri: image }} />
+      <Image source={{ uri: question.image }} />
       <PublicationDate created_at={created_at} />
-      <Author email={email} username={username} />
+      <Author email={user.email} username={user.username} />
       <Comments comments={comments} />
       <AddComment />
     </Container>

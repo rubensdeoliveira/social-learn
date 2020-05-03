@@ -15,12 +15,19 @@ interface CommentData {
 }
 
 interface PostData {
-  id: number
+  comments: CommentData[]
+  user: UserData
+  question: QuestionData
+  created_at: string
+}
+
+interface UserData {
   username: string
   email: string
+}
+
+interface QuestionData {
   image: string
-  comments: CommentData[]
-  create_at: Date
 }
 
 const Feed: React.FC = () => {
