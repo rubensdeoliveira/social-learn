@@ -13,7 +13,11 @@ import { useAuth } from '../../hooks/auth'
 
 import logo from '../../assets/logo.png'
 
-const Header: React.FC = () => {
+interface HeaderParams {
+  title: string
+}
+
+const Header: React.FC<HeaderParams> = ({ title }) => {
   const { user } = useAuth()
 
   const username = user ? user.username : 'Anônimo'
@@ -22,7 +26,7 @@ const Header: React.FC = () => {
     <Container>
       <RowContainer>
         <Image source={logo} />
-        <Title>Historal</Title>
+        <Title>{title}</Title>
       </RowContainer>
       <UserContainer>
         <Username>{username}</Username>

@@ -5,10 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { useAuth } from '../hooks/auth'
 
+import FeedRoutes from './feed.routes'
 import AuthRoutes from './auth.routes'
 import AppRoutes from './app.routes'
 
-import Feed from '../pages/Feed'
 import AddPhoto from '../pages/AddPhoto'
 
 const Tab = createBottomTabNavigator()
@@ -41,7 +41,7 @@ const TabRouter: React.FC = () => {
         showLabel: false,
       }}
     >
-      <Tab.Screen name="Feed" component={Feed} />
+      <Tab.Screen name="Feed" component={FeedRoutes} />
       <Tab.Screen name="AddPhoto" component={AddPhoto} />
       <Tab.Screen name="Profile" component={user ? AppRoutes : AuthRoutes} />
     </Tab.Navigator>

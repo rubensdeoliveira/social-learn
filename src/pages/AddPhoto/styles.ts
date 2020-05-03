@@ -68,4 +68,6 @@ export const PickerContainer = styled.View`
 
 export const Picker = styled.Picker`
   flex: 1;
+  font-family: 'Poppins-Regular';
+  width: 100%;
 `

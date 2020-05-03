@@ -88,12 +88,12 @@ const AddPhoto: React.FC = () => {
         setQuestionCategorie('')
         Alert.alert('Sucesso', 'Pergunta criada com sucesso!')
 
-        navigation.navigate('Feed')
+        navigation.navigate('Main')
       } catch (err) {
         Alert.alert('Erro ao criar pergunta', err.message)
       }
     },
-    [navigation, image, user, token, questionCategorie, correctChoice],
+    [correctChoice, image, navigation, questionCategorie, user, token],
   )
 
   const handleAddChoice = useCallback(() => {
@@ -166,7 +166,6 @@ const AddPhoto: React.FC = () => {
                 />
               ))}
             </Picker>
-            <Icon size={30} name="chevron-down" color="#ff6b6b" />
           </PickerContainer>
 
           <PickerContainer>
@@ -185,7 +184,6 @@ const AddPhoto: React.FC = () => {
                 value="Glândulas Salivares"
               />
             </Picker>
-            <Icon size={30} name="chevron-down" color="#ff6b6b" />
           </PickerContainer>
 
           <Button

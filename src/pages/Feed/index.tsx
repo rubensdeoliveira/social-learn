@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { useRoute, useNavigation } from '@react-navigation/native'
 import { Alert } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+
 import api from '../../services/api'
 
 import Post from '../../components/Post'
@@ -8,7 +9,7 @@ import Header from '../../components/Header'
 
 import { Container, List } from './styles'
 
-interface CommentsData {
+interface CommentData {
   username: string
   comment: string
 }
@@ -18,13 +19,16 @@ interface PostData {
   username: string
   email: string
   image: string
-  comments: CommentsData[]
+  comments: CommentData[]
+  create_at: Date
 }
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<PostData[]>([])
 
   const navigation = useNavigation()
+  const route = useRoute()
+  const { categorie } = route.params
 
   useEffect(() => {
     const loadPosts = async (): Promise<void> => {
@@ -36,7 +40,9 @@ const Feed: React.FC = () => {
         const postsToAdd: PostData[] = []
 
         postsKeys.forEach((postKey) => {
-          postsToAdd.push({ id: postKey, ...postsObj[postKey] })
+          if (postsObj[postKey].question.categorie === categorie) {
+            postsToAdd.push({ id: postKey, ...postsObj[postKey] })
+          }
         })
 
         postsToAdd.reverse()
@@ -55,22 +61,15 @@ const Feed: React.FC = () => {
     navigation.addListener('focus', () => {
       loadPosts()
     })
-  }, [navigation])
+  }, [navigation, categorie])
 
   return (
     <Container>
-      <Header />
+      <Header title={categorie} />
       <List
         data={posts}
         keyExtractor={(item) => `${item.id}`}
-        renderItem={({ item }: { item: PostData }) => (
-          <Post
-            comments={item.comments}
-            email={item.email}
-            username={item.username}
-            image={item.image}
-          />
-        )}
+        renderItem={({ item }: { item: PostData }) => <Post {...item} />}
       />
     </Container>
   )
