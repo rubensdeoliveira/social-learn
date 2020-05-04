@@ -1,12 +1,13 @@
 import React from 'react'
 
-import { Container, Image } from './styles'
+import { Container, Image, RowContainer } from './styles'
 
 import Author from '../Author'
 import Comments from '../Comments'
 import AddComment from '../AddComment'
 import PublicationDate from '../PublicationDate'
 import Question from '../Question'
+import AnswerIndicator from '../AnswerIndicator'
 
 interface CommentData {
   username: string
@@ -42,7 +43,10 @@ const Post: React.FC<PostData> = ({
       <Image source={{ uri: question.image }} />
       <PublicationDate created_at={created_at} />
       <Question question={question} id={id} />
-      <Author email={user.email} username={user.username} />
+      <RowContainer>
+        <Author email={user.email} username={user.username} />
+        <AnswerIndicator id={id} />
+      </RowContainer>
       <Comments comments={comments} />
       <AddComment />
     </Container>

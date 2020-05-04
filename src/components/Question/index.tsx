@@ -15,7 +15,7 @@ interface QuestionData {
 const Question: React.FC<QuestionData> = ({ question, id }) => {
   const choices = Object.keys(question.choices)
 
-  const { user, token } = useAuth()
+  const { user, token, setUserAnswersValue } = useAuth()
   const { changeVisibility, setRightAnswerValue } = useModal()
 
   const handleQuestionAnswered = useCallback(
@@ -38,13 +38,16 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
             userAnswers.splice(findIndex, 1)
           }
 
+          const userAnswersValue = [
+            ...userAnswers,
+            { idQuestion: id, correct: userAnswerCorrected },
+          ]
+
           await api.patch(`users/${user.id}.json?auth=${token}`, {
-            userAnswers: [
-              ...userAnswers,
-              { idQuestion: id, correct: userAnswerCorrected },
-            ],
+            userAnswers: userAnswersValue,
           })
 
+          await setUserAnswersValue(userAnswersValue)
           setRightAnswerValue(userAnswerCorrected)
           changeVisibility(true)
         }
@@ -52,7 +55,15 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
         Alert.alert('Ocorreu um erro', 'Tente responder a pergunta novamente')
       }
     },
-    [question, id, token, user, changeVisibility, setRightAnswerValue],
+    [
+      question,
+      id,
+      token,
+      user,
+      changeVisibility,
+      setRightAnswerValue,
+      setUserAnswersValue,
+    ],
   )
 
   return (
@@ -60,6 +71,7 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
       <Description>{question.description}</Description>
       {choices.map((choice) => (
         <Choice
+          key={choice}
           onPress={() => {
             handleQuestionAnswered(choice)
           }}

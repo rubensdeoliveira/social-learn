@@ -20,10 +20,21 @@ interface SingInCredentials {
   password: string
 }
 
+interface AnswerState {
+  idQuestion: string
+  correct: boolean
+}
+
+interface UserAnswersState {
+  userAnswers: AnswerState[]
+}
+
 interface AuthContextData {
+  userAnswers: UserAnswersState
   user: Object
   loading: boolean
   signIn(credentials: SingInCredentials): Promise<void>
+  setUserAnswersValue(userAnswersValue: UserAnswersState): void
   signOut(): void
   token: string
 }
@@ -33,22 +44,33 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState)
   const [loading, setLoading] = useState(true)
+  const [userAnswers, setUserAnswers] = useState<UserAnswersState[]>([])
 
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
-      const [token, user] = await AsyncStorage.multiGet([
+      const [token, user, userAnswersFromAsync] = await AsyncStorage.multiGet([
         '@GoBarber:token',
         '@GoBarber:user',
+        '@GoBarber:useranswers',
       ])
 
-      if (token[1] && user[1]) {
+      if (token[1] && user[1] && userAnswersFromAsync[1]) {
         setData({ token: token[1], user: JSON.parse(user[1]) })
+        setUserAnswers(JSON.parse(userAnswersFromAsync[1]))
       }
 
       setLoading(false)
     }
 
     loadStorageData()
+  }, [])
+
+  const setUserAnswersValue = useCallback(async (userAnswersValue) => {
+    setUserAnswers(userAnswersValue)
+    await AsyncStorage.setItem(
+      '@GoBarber:useranswers',
+      JSON.stringify(userAnswersValue),
+    )
   }, [])
 
   const signIn = useCallback(async ({ email, password }) => {
@@ -64,15 +86,26 @@ const AuthProvider: React.FC = ({ children }) => {
     if (response.data.localId) {
       const responseUser = await api.get(`users/${response.data.localId}.json`)
 
-      const user = { email, ...responseUser.data, id: response.data.localId }
+      const user = {
+        email,
+        ...responseUser.data,
+        id: response.data.localId,
+      }
       const token = response.data.idToken
+      let userAnswersData = responseUser.data.userAnswers
+
+      if (userAnswersData == null) {
+        userAnswersData = []
+      }
 
       await AsyncStorage.multiSet([
         ['@GoBarber:token', token],
         ['@GoBarber:user', JSON.stringify(user)],
+        ['@GoBarber:useranswers', JSON.stringify(userAnswersData)],
       ])
 
       setData({ token, user })
+      setUserAnswers(userAnswersData)
     }
   }, [])
 
@@ -84,7 +117,15 @@ const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user: data.user, token: data.token, loading, signIn, signOut }}
+      value={{
+        userAnswers,
+        user: data.user,
+        token: data.token,
+        loading,
+        signIn,
+        signOut,
+        setUserAnswersValue,
+      }}
     >
       {children}
     </AuthContext.Provider>

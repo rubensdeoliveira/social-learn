@@ -10,7 +10,7 @@ interface UserData {
 }
 
 const Profile: React.FC = () => {
-  const { signOut, user } = useAuth()
+  const { signOut, user, userAnswers } = useAuth()
 
   const handleLogout = useCallback(() => {
     signOut()
