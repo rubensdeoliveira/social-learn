@@ -64,7 +64,7 @@ const AuthProvider: React.FC = ({ children }) => {
     if (response.data.localId) {
       const responseUser = await api.get(`users/${response.data.localId}.json`)
 
-      const user = { email, ...responseUser.data }
+      const user = { email, ...responseUser.data, id: response.data.localId }
       const token = response.data.idToken
 
       await AsyncStorage.multiSet([

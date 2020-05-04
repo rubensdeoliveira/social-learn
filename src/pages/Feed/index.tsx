@@ -19,6 +19,7 @@ interface PostData {
   user: UserData
   question: QuestionData
   created_at: string
+  id: string
 }
 
 interface UserData {

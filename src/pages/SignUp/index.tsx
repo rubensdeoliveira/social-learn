@@ -27,6 +27,7 @@ import logoImg from '../../assets/logo.png'
 interface SignUpFormData {
   name: string
   username: string
+  userAnswers: string[]
   email: string
   password: string
 }

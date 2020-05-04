@@ -57,6 +57,13 @@ const AddPhoto: React.FC = () => {
     )
   }, [])
 
+  const setInititalState = useCallback(() => {
+    setImage({} as ImageProps)
+    setCorrectChoice('')
+    setChoices([{ text: '' }, { text: '' }])
+    setQuestionCategorie('')
+  }, [])
+
   const handleCreateQuestion = useCallback(
     async (data) => {
       try {
@@ -82,18 +89,23 @@ const AddPhoto: React.FC = () => {
 
         await api.post(`posts.json?auth=${token}`, post)
 
-        setImage({} as ImageProps)
-        setCorrectChoice('')
-        setChoices([{ text: '' }, { text: '' }])
-        setQuestionCategorie('')
         Alert.alert('Sucesso', 'Pergunta criada com sucesso!')
+        setInititalState()
 
         navigation.navigate('Main')
       } catch (err) {
         Alert.alert('Erro ao criar pergunta', err.message)
       }
     },
-    [correctChoice, image, navigation, questionCategorie, user, token],
+    [
+      correctChoice,
+      image,
+      navigation,
+      questionCategorie,
+      user,
+      token,
+      setInititalState,
+    ],
   )
 
   const handleAddChoice = useCallback(() => {
@@ -144,7 +156,7 @@ const AddPhoto: React.FC = () => {
             <Input
               key={`${choice.text + index}`}
               icon="list"
-              name={`choices.choice${String.fromCharCode(65 + index)}`}
+              name={`choices[choice${String.fromCharCode(65 + index)}]`}
               placeholder={`alternativa ${String.fromCharCode(65 + index)}`}
             />
           ))}
