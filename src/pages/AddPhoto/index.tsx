@@ -202,8 +202,9 @@ const AddPhoto: React.FC = () => {
             onPress={() => {
               formRef.current?.submitForm()
             }}
+            style={{ marginTop: 8 }}
           >
-            Salva
+            Salvar
           </Button>
         </Form>
       </Container>

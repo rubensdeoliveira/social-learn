@@ -1,8 +1,11 @@
 import React, { useState, useCallback } from 'react'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
-
 import { Alert } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../../hooks/auth'
+import api from '../../services/api'
+
 import {
   Container,
   CommentContainer,
@@ -11,13 +14,31 @@ import {
   CommentText,
 } from './styles'
 
-const AddComment: React.FC = () => {
+const AddComment: React.FC = ({ id }) => {
   const [comment, setComment] = useState('')
   const [editMode, setEditMode] = useState(false)
 
-  const handleAddComment = useCallback(() => {
-    Alert.alert('Adicionado', comment)
-  }, [comment])
+  const { token, user } = useAuth()
+  const navigation = useNavigation()
+
+  const handleAddComment = useCallback(async () => {
+    try {
+      const response = await api.get(`posts/${id}.json`)
+
+      const comments = response.data.comments || []
+      comments.push({ comment, username: user.username })
+
+      await api.patch(`/posts/${id}.json?auth=${token}`, {
+        comments,
+      })
+
+      setComment('')
+      setEditMode(false)
+      navigation.navigate('CommentsPage', { id })
+    } catch (err) {
+      Alert.alert('Erro ao adicionar comentário', err.message)
+    }
+  }, [token, id, comment, user])
 
   const handleCommentInputChange = useCallback((commentText) => {
     setComment(commentText)
