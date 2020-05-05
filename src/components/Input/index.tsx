@@ -62,12 +62,13 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
 
   return (
     <Container isFocused={isFocused} isErrored={!!error}>
-      <Icon
-        name={icon}
-        size={20}
-        color={isFocused || isFilled ? '#ff6b6b' : '#666360'}
-      />
-
+      {icon !== 'no-icon' && (
+        <Icon
+          name={icon}
+          size={20}
+          color={isFocused || isFilled ? '#ff6b6b' : '#666360'}
+        />
+      )}
       <TextInput
         ref={inputElementRef}
         placeholderTextColor="#666360"
