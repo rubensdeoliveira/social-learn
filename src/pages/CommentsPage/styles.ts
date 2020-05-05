@@ -9,7 +9,13 @@ export const Container = styled.View`
 export const CommentContainer = styled.View`
   flex-direction: row;
   margin-top: 5px;
+`
+
+export const CommentContentRow = styled.View`
+  flex-direction: row;
   flex-wrap: wrap;
+  flex: 1;
+  padding: 5px;
 `
 
 export const Username = styled.Text`
@@ -21,4 +27,11 @@ export const Username = styled.Text`
 export const Comment = styled.Text`
   color: #555;
   font-family: 'Poppins-Regular';
+`
+
+export const Created = styled.Text`
+  font-size: 11px;
+  font-family: 'Poppins-Regular';
+  margin-left: auto;
+  padding: 5px;
 `

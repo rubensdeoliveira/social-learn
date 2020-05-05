@@ -3,6 +3,7 @@ import React, { useState, useCallback } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { uuid } from 'uuidv4'
 import { useAuth } from '../../hooks/auth'
 import api from '../../services/api'
 
@@ -26,7 +27,13 @@ const AddComment: React.FC = ({ id }) => {
       const response = await api.get(`posts/${id}.json`)
 
       const comments = response.data.comments || []
-      comments.push({ comment, username: user.username })
+      comments.push({
+        comment,
+        username: user.username,
+        email: user.email,
+        created_at: new Date(),
+        id: Math.random().toString(36).substr(2, 9),
+      })
 
       await api.patch(`/posts/${id}.json?auth=${token}`, {
         comments,
@@ -38,7 +45,7 @@ const AddComment: React.FC = ({ id }) => {
     } catch (err) {
       Alert.alert('Erro ao adicionar comentário', err.message)
     }
-  }, [token, id, comment, user])
+  }, [token, id, comment, user, navigation])
 
   const handleCommentInputChange = useCallback((commentText) => {
     setComment(commentText)

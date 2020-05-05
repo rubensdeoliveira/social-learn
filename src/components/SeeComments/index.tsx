@@ -13,7 +13,7 @@ interface CommentProps {
   comments: CommentObject[]
 }
 
-const Comments: React.FC<CommentProps> = ({ id }) => {
+const SeeComments: React.FC<CommentProps> = ({ id }) => {
   const navigation = useNavigation()
 
   return (
@@ -31,4 +31,4 @@ const Comments: React.FC<CommentProps> = ({ id }) => {
   )
 }
 
-export default Comments
+export default SeeComments

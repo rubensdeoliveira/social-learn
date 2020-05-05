@@ -74,6 +74,7 @@ const SignUp: React.FC = () => {
           await api.put(`/users/${response.data.localId}.json`, {
             name: data.name,
             username: data.username,
+            isModerator: false,
           })
         }
 

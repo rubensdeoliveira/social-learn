@@ -42,7 +42,9 @@ const TabRouter: React.FC = () => {
       }}
     >
       <Tab.Screen name="Feed" component={FeedRoutes} />
-      <Tab.Screen name="AddPhoto" component={AddPhoto} />
+      {!user || !user.isModerator ? null : (
+        <Tab.Screen name="AddPhoto" component={AddPhoto} />
+      )}
       <Tab.Screen name="Profile" component={user ? AppRoutes : AuthRoutes} />
     </Tab.Navigator>
   )
