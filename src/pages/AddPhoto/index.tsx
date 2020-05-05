@@ -64,9 +64,19 @@ const AddPhoto: React.FC = () => {
     setQuestionCategorie('')
   }, [])
 
+  const validations = useCallback((): boolean => {
+    if (!user.isModerator) {
+      Alert.alert('Não autorizado', 'Somente moderadores podem criar perguntas')
+      return false
+    }
+    return true
+  }, [user])
+
   const handleCreateQuestion = useCallback(
     async (data) => {
       try {
+        if (!validations()) return
+
         const responseImage = await axios({
           url: 'uploadImage',
           baseURL: FIREBASE_STORAGE_URL,
