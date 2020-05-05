@@ -26,9 +26,15 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
         const { userAnswers } = response.data
 
         if (userAnswers == null) {
+          const userAnswersValue = [
+            { idQuestion: id, correct: userAnswerCorrected },
+          ]
+
           await api.patch(`users/${user.id}.json?auth=${token}`, {
-            userAnswers: [{ idQuestion: id, correct: userAnswerCorrected }],
+            userAnswers: userAnswersValue,
           })
+
+          await setUserAnswersValue(userAnswersValue)
         } else {
           const findIndex = userAnswers.findIndex((answer) => {
             return answer.idQuestion === id
@@ -48,9 +54,10 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
           })
 
           await setUserAnswersValue(userAnswersValue)
-          setRightAnswerValue(userAnswerCorrected)
-          changeVisibility(true)
         }
+
+        setRightAnswerValue(userAnswerCorrected)
+        changeVisibility(true)
       } catch {
         Alert.alert('Ocorreu um erro', 'Tente responder a pergunta novamente')
       }
