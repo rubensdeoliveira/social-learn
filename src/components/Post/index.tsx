@@ -9,6 +9,8 @@ import PublicationDate from '../PublicationDate'
 import Question from '../Question'
 import AnswerIndicator from '../AnswerIndicator'
 
+import questionImg from '../../assets/question.jpg'
+
 interface CommentData {
   username: string
   comment: string
@@ -38,24 +40,17 @@ const Post: React.FC<PostData> = ({
   comments,
   id,
 }) => {
+  console.log(question.image)
   return (
     <Container>
-      <Image source={{ uri: question.image }} />
+      <Image source={question.image ? { uri: question.image } : questionImg} />
       <PublicationDate created_at={created_at} />
       <Question question={question} id={id} />
       <RowContainer>
         <Author email={user.email} username={user.username} />
         <AnswerIndicator id={id} />
       </RowContainer>
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <Comments id={id} />
-=======
       <SeeComments id={id} />
->>>>>>> develop
-=======
-      <SeeComments id={id} />
->>>>>>> develop
       <AddComment id={id} />
     </Container>
   )

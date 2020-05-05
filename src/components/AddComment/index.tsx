@@ -3,14 +3,6 @@ import React, { useState, useCallback } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import { uuid } from 'uuidv4'
->>>>>>> develop
-=======
-import { uuid } from 'uuidv4'
->>>>>>> develop
 import { useAuth } from '../../hooks/auth'
 import api from '../../services/api'
 
@@ -32,14 +24,8 @@ const AddComment: React.FC = ({ id }) => {
   const handleAddComment = useCallback(async () => {
     try {
       const response = await api.get(`posts/${id}.json`)
-
       const comments = response.data.comments || []
-<<<<<<< HEAD
-<<<<<<< HEAD
-      comments.push({ comment, username: user.username })
-=======
-=======
->>>>>>> develop
+
       comments.push({
         comment,
         username: user.username,
@@ -47,10 +33,6 @@ const AddComment: React.FC = ({ id }) => {
         created_at: new Date(),
         id: Math.random().toString(36).substr(2, 9),
       })
-<<<<<<< HEAD
->>>>>>> develop
-=======
->>>>>>> develop
 
       await api.patch(`/posts/${id}.json?auth=${token}`, {
         comments,
@@ -62,15 +44,7 @@ const AddComment: React.FC = ({ id }) => {
     } catch (err) {
       Alert.alert('Erro ao adicionar comentário', err.message)
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-  }, [token, id, comment, user])
-=======
   }, [token, id, comment, user, navigation])
->>>>>>> develop
-=======
-  }, [token, id, comment, user, navigation])
->>>>>>> develop
 
   const handleCommentInputChange = useCallback((commentText) => {
     setComment(commentText)

@@ -64,33 +64,78 @@ const AddPhoto: React.FC = () => {
     setQuestionCategorie('')
   }, [])
 
-  const validations = useCallback((): boolean => {
-    if (!user.isModerator) {
-      Alert.alert('Não autorizado', 'Somente moderadores podem criar perguntas')
-      return false
-    }
-    return true
-  }, [user])
+  const validations = useCallback(
+    (data): boolean => {
+      console.log(data.choices.choiceA)
+
+      if (!user.isModerator) {
+        Alert.alert(
+          'Não autorizado',
+          'Somente moderadores podem criar perguntas',
+        )
+        return false
+      }
+
+      if (data.description.trim() === '') {
+        Alert.alert('Erro', 'Preencha a pergunta para continuar')
+        return false
+      }
+
+      if (
+        data.choices.choiceA.trim() === '' ||
+        data.choices.choiceB.trim() === '' ||
+        (data.choices.choiceC !== undefined &&
+          data.choices.choiceC.trim() === '') ||
+        (data.choices.choiceD !== undefined &&
+          data.choices.choiceD.trim() === '')
+      ) {
+        Alert.alert(
+          'Erro',
+          'Para continuar não deixe alternativas sem preencher',
+        )
+        return false
+      }
+
+      if (correctChoice === null || correctChoice === '') {
+        Alert.alert(
+          'Erro',
+          'Selecione a alternativa correta da questão para continuar',
+        )
+        return false
+      }
+
+      if (questionCategorie === null || questionCategorie === '') {
+        Alert.alert('Erro', 'Selecione a categoria da questão para continuar')
+        return false
+      }
+
+      return true
+    },
+    [user, correctChoice, questionCategorie],
+  )
 
   const handleCreateQuestion = useCallback(
     async (data) => {
       try {
-        if (!validations()) return
+        if (!validations(data)) return
 
-        const responseImage = await axios({
-          url: 'uploadImage',
-          baseURL: FIREBASE_STORAGE_URL,
-          method: 'post',
-          data: {
-            image: image.base64,
-          },
-        })
+        let imageData = null
+        if (image.base64) {
+          imageData = await axios({
+            url: 'uploadImage',
+            baseURL: FIREBASE_STORAGE_URL,
+            method: 'post',
+            data: {
+              image: image.base64,
+            },
+          })
+        }
 
         const post = {
           user: { username: user.username, email: user.email },
           created_at: new Date(),
           question: {
-            image: responseImage.data.imageUrl,
+            image: imageData ? imageData.data.imageUrl : undefined,
             categorie: questionCategorie,
             ...data,
             correctChoice,
@@ -108,6 +153,7 @@ const AddPhoto: React.FC = () => {
       }
     },
     [
+      validations,
       correctChoice,
       image,
       navigation,
