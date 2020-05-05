@@ -4,6 +4,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import { uuid } from 'uuidv4'
+>>>>>>> develop
 =======
 import { uuid } from 'uuidv4'
 >>>>>>> develop
@@ -31,8 +35,11 @@ const AddComment: React.FC = ({ id }) => {
 
       const comments = response.data.comments || []
 <<<<<<< HEAD
+<<<<<<< HEAD
       comments.push({ comment, username: user.username })
 =======
+=======
+>>>>>>> develop
       comments.push({
         comment,
         username: user.username,
@@ -40,6 +47,9 @@ const AddComment: React.FC = ({ id }) => {
         created_at: new Date(),
         id: Math.random().toString(36).substr(2, 9),
       })
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 
       await api.patch(`/posts/${id}.json?auth=${token}`, {
@@ -53,7 +63,11 @@ const AddComment: React.FC = ({ id }) => {
       Alert.alert('Erro ao adicionar comentário', err.message)
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
   }, [token, id, comment, user])
+=======
+  }, [token, id, comment, user, navigation])
+>>>>>>> develop
 =======
   }, [token, id, comment, user, navigation])
 >>>>>>> develop

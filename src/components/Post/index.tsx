@@ -48,7 +48,11 @@ const Post: React.FC<PostData> = ({
         <AnswerIndicator id={id} />
       </RowContainer>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <Comments id={id} />
+=======
+      <SeeComments id={id} />
+>>>>>>> develop
 =======
       <SeeComments id={id} />
 >>>>>>> develop
