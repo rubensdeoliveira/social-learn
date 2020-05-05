@@ -13,6 +13,7 @@ export const CommentContainer = styled.View`
 
 export const CommentInput = styled.TextInput`
   width: 90%;
+  padding: 10px 0;
 `
 
 export const EditModeButton = styled.TouchableWithoutFeedback``

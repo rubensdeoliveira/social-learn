@@ -9,6 +9,4 @@ export const Container = styled.View`
   background: #fafafa;
 `
 
-export const List = styled(FlatList)`
-  margin-top: 10px;
-`
+export const List = styled(FlatList)``

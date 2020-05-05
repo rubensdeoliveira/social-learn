@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { Container, CommentContainer, Username, Comment } from './styles'
+import { TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { Container, SeeAllText, SeeAllCommentContainer } from './styles'
 
 interface CommentObject {
   username: string
@@ -11,16 +13,20 @@ interface CommentProps {
   comments: CommentObject[]
 }
 
-const Comments: React.FC<CommentProps> = ({ comments }) => {
+const Comments: React.FC<CommentProps> = ({ id }) => {
+  const navigation = useNavigation()
+
   return (
     <Container>
-      {comments &&
-        comments.map((comment) => (
-          <CommentContainer key={comment.comment}>
-            <Username>{comment.username}: </Username>
-            <Comment>{comment.comment}</Comment>
-          </CommentContainer>
-        ))}
+      <SeeAllCommentContainer>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('CommentsPage', { id })
+          }}
+        >
+          <SeeAllText>Ver comentários</SeeAllText>
+        </TouchableOpacity>
+      </SeeAllCommentContainer>
     </Container>
   )
 }

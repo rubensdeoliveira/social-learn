@@ -47,8 +47,8 @@ const Post: React.FC<PostData> = ({
         <Author email={user.email} username={user.username} />
         <AnswerIndicator id={id} />
       </RowContainer>
-      <Comments comments={comments} />
-      <AddComment />
+      <Comments id={id} />
+      <AddComment id={id} />
     </Container>
   )
 }
