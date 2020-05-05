@@ -3,7 +3,7 @@ import React from 'react'
 import { Container, Image, RowContainer } from './styles'
 
 import Author from '../Author'
-import Comments from '../Comments'
+import SeeComments from '../SeeComments'
 import AddComment from '../AddComment'
 import PublicationDate from '../PublicationDate'
 import Question from '../Question'
@@ -47,7 +47,7 @@ const Post: React.FC<PostData> = ({
         <Author email={user.email} username={user.username} />
         <AnswerIndicator id={id} />
       </RowContainer>
-      <Comments id={id} />
+      <SeeComments id={id} />
       <AddComment id={id} />
     </Container>
   )
