@@ -66,8 +66,6 @@ const AddPhoto: React.FC = () => {
 
   const validations = useCallback(
     (data): boolean => {
-      console.log(data.choices.choiceA)
-
       if (!user.isModerator) {
         Alert.alert(
           'Não autorizado',

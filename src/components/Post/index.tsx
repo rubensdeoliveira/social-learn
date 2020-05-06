@@ -8,6 +8,7 @@ import AddComment from '../AddComment'
 import PublicationDate from '../PublicationDate'
 import Question from '../Question'
 import AnswerIndicator from '../AnswerIndicator'
+import DeletePost from '../DeletePost'
 
 import questionImg from '../../assets/question.jpg'
 
@@ -40,11 +41,11 @@ const Post: React.FC<PostData> = ({
   comments,
   id,
 }) => {
-  console.log(question.image)
   return (
     <Container>
       <Image source={question.image ? { uri: question.image } : questionImg} />
       <PublicationDate created_at={created_at} />
+      <DeletePost id={id} />
       <Question question={question} id={id} />
       <RowContainer>
         <Author email={user.email} username={user.username} />
