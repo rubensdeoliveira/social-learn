@@ -26,7 +26,7 @@ interface AnswerState {
 }
 
 interface UserAnswersState {
-  userAnswers: AnswerState[]
+  userAnswers?: AnswerState[]
 }
 
 interface AuthContextData {
@@ -36,6 +36,7 @@ interface AuthContextData {
   signIn(credentials: SingInCredentials): Promise<void>
   setUserAnswersValue(userAnswersValue: UserAnswersState): void
   signOut(): void
+  modifyUser(user: Object): Promise<void>
   token: string
 }
 
@@ -44,7 +45,9 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState)
   const [loading, setLoading] = useState(true)
-  const [userAnswers, setUserAnswers] = useState<UserAnswersState[]>([])
+  const [userAnswers, setUserAnswers] = useState<UserAnswersState>(
+    [] as UserAnswersState,
+  )
 
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
@@ -72,6 +75,15 @@ const AuthProvider: React.FC = ({ children }) => {
       JSON.stringify(userAnswersValue),
     )
   }, [])
+
+  const modifyUser = useCallback(
+    async (user) => {
+      await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user))
+
+      setData({ user, token: data.token })
+    },
+    [data],
+  )
 
   const signIn = useCallback(async ({ email, password }) => {
     const response = await axios.post(
@@ -125,6 +137,7 @@ const AuthProvider: React.FC = ({ children }) => {
         signIn,
         signOut,
         setUserAnswersValue,
+        modifyUser,
       }}
     >
       {children}

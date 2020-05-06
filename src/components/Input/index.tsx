@@ -57,8 +57,12 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
       name: fieldName,
       ref: inputValueRef.current,
       path: 'value',
+      clearValue() {
+        inputValueRef.current.value = ''
+        inputElementRef.current.clear()
+      },
     })
-  }, [fieldName, registerField])
+  }, [fieldName, registerField, ref])
 
   return (
     <Container isFocused={isFocused} isErrored={!!error}>

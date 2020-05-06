@@ -14,8 +14,6 @@ import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
 import * as Yup from 'yup'
 import axios from 'axios'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import moment from 'moment'
 import api from '../../services/api'
 import { AUTH_BASE_URL, API_KEY } from '../../env.js'
 
@@ -219,10 +217,6 @@ const SignUp: React.FC = () => {
                 name="email"
                 icon="no-icon"
                 placeholder="E-mail"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  cityInputRef.current?.focus()
-                }}
               />
 
               <PickerContainer>

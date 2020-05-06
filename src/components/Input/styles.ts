@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/native'
 import FeatherIcon from 'react-native-vector-icons/Feather'
+import { TextInputMask as TIM } from 'react-native-masked-text'
 
 interface ContainerProps {
   isFocused: boolean
@@ -33,6 +34,13 @@ export const Container = styled.View<ContainerProps>`
 `
 
 export const TextInput = styled.TextInput`
+  flex: 1;
+  font-size: 16px;
+  font-family: 'Poppins-Regular';
+  padding-top: 15px;
+`
+
+export const TextInputMask = styled(TIM)`
   flex: 1;
   font-size: 16px;
   font-family: 'Poppins-Regular';

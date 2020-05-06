@@ -1,7 +1,19 @@
 import React, { useCallback } from 'react'
-import { Container, GravatarImage, Username, Email } from './styles'
+import { Alert } from 'react-native'
+import ImagePicker from 'react-native-image-picker'
+import axios from 'axios'
+import {
+  Container,
+  Image,
+  Username,
+  College,
+  EditPhoto,
+  EditPhotoText,
+  SaveButton,
+} from './styles'
 import { useAuth } from '../../hooks/auth'
-import Button from '../../components/Button'
+import api from '../../services/api'
+import { FIREBASE_STORAGE_URL } from '../../env.js'
 
 interface UserData {
   email: string
@@ -9,8 +21,45 @@ interface UserData {
   name: string
 }
 
+interface ImageProps {
+  base64: string
+  uri: string
+}
+
 const Profile: React.FC = () => {
-  const { signOut, user, userAnswers } = useAuth()
+  const { signOut, user, token, modifyUser } = useAuth()
+
+  const handlePickImage = useCallback(() => {
+    ImagePicker.showImagePicker(
+      {
+        title: 'Escolha a imagem',
+        maxHeight: 600,
+        maxWidth: 800,
+      },
+      async (res) => {
+        if (!res.didCancel) {
+          try {
+            const response = await axios({
+              url: 'uploadImage',
+              baseURL: FIREBASE_STORAGE_URL,
+              method: 'post',
+              data: {
+                image: res.data,
+              },
+            })
+
+            await api.patch(`/users/${user.id}.json?auth=${token}`, {
+              image: response.data.imageUrl,
+            })
+
+            await modifyUser({ ...user, image: response.data.imageUrl })
+          } catch (err) {
+            Alert.alert('Erro ao editar foto', err.message)
+          }
+        }
+      },
+    )
+  }, [user, token, modifyUser])
 
   const handleLogout = useCallback(() => {
     signOut()
@@ -18,10 +67,13 @@ const Profile: React.FC = () => {
 
   return (
     <Container>
-      <GravatarImage options={{ email: user.email, secure: true }} />
+      <Image source={{ uri: user.image }} />
+      <EditPhoto onPress={handlePickImage}>
+        <EditPhotoText>Editar foto</EditPhotoText>
+      </EditPhoto>
       <Username>{user.username}</Username>
-      <Email>{user.username}</Email>
-      <Button onPress={handleLogout}>Sair</Button>
+      <College>{user.college}</College>
+      <SaveButton onPress={handleLogout}>Sair</SaveButton>
     </Container>
   )
 }

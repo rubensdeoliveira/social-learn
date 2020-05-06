@@ -3,11 +3,11 @@ import React from 'react'
 import {
   Container,
   RowContainer,
-  Image,
   Title,
+  ImageLogo,
   UserContainer,
   Username,
-  GravatarImage,
+  UserImage,
 } from './styles'
 import { useAuth } from '../../hooks/auth'
 
@@ -25,14 +25,12 @@ const Header: React.FC<HeaderParams> = ({ title }) => {
   return (
     <Container>
       <RowContainer>
-        <Image source={logo} />
+        <ImageLogo source={logo} />
         <Title>{title}</Title>
       </RowContainer>
       <UserContainer>
         <Username>{username}</Username>
-        {user && (
-          <GravatarImage options={{ email: user.email, secure: true }} />
-        )}
+        {user && <UserImage source={{ uri: user.image }} />}
       </UserContainer>
     </Container>
   )

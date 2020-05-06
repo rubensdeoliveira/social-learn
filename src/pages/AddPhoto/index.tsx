@@ -62,6 +62,7 @@ const AddPhoto: React.FC = () => {
     setCorrectChoice('')
     setChoices([{ text: '' }, { text: '' }])
     setQuestionCategorie('')
+    formRef.current?.reset()
   }, [])
 
   const validations = useCallback(

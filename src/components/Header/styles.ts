@@ -2,8 +2,6 @@ import styled from 'styled-components/native'
 
 import { Platform } from 'react-native'
 
-import { Gravatar } from 'react-native-gravatar'
-
 export const Container = styled.View`
   margin-top: ${Platform.OS === 'ios' ? 20 : 0}px;
   padding: 10px;
@@ -20,7 +18,7 @@ export const RowContainer = styled.View`
   align-items: center;
 `
 
-export const Image = styled.Image`
+export const ImageLogo = styled.Image`
   height: 30px;
   width: 30px;
 `
@@ -44,7 +42,7 @@ export const Username = styled.Text`
   color: #bbb;
 `
 
-export const GravatarImage = styled(Gravatar)`
+export const UserImage = styled.Image`
   width: 30px;
   height: 30px;
   border-radius: 15px;
