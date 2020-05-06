@@ -8,6 +8,14 @@ export const Container = styled.View`
   padding: 30px;
 `
 
+export const EmptyPhoto = styled.View`
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  margin-top: 60px;
+  background-color: #eee;
+`
+
 export const Image = styled.Image`
   width: 150px;
   height: 150px;

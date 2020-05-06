@@ -10,6 +10,7 @@ import {
   EditPhoto,
   EditPhotoText,
   SaveButton,
+  EmptyPhoto,
 } from './styles'
 import { useAuth } from '../../hooks/auth'
 import api from '../../services/api'
@@ -67,12 +68,16 @@ const Profile: React.FC = () => {
 
   return (
     <Container>
-      <Image source={{ uri: user.image }} />
+      {user && user.image ? (
+        <Image source={{ uri: user.image }} />
+      ) : (
+        <EmptyPhoto />
+      )}
       <EditPhoto onPress={handlePickImage}>
         <EditPhotoText>Editar foto</EditPhotoText>
       </EditPhoto>
       <Username>{user.username}</Username>
-      <College>{user.college}</College>
+      {user && user.college ? <College>{user.college}</College> : null}
       <SaveButton onPress={handleLogout}>Sair</SaveButton>
     </Container>
   )

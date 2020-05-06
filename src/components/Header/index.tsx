@@ -30,7 +30,7 @@ const Header: React.FC<HeaderParams> = ({ title }) => {
       </RowContainer>
       <UserContainer>
         <Username>{username}</Username>
-        {user && <UserImage source={{ uri: user.image }} />}
+        {user && user.image && <UserImage source={{ uri: user.image }} />}
       </UserContainer>
     </Container>
   )
