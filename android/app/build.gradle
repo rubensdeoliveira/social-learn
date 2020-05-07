@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sociallearn"
+        applicationId "br.com.smilecode.historal"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -194,6 +194,12 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
+    //add depois
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation "com.google.firebase:firebase-auth:17.0.0"
+    //add depois
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
@@ -223,6 +229,10 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+//add depois
+apply plugin: 'com.google.gms.google-services'
+//add depois
+
 
 project.ext.vectoricons = [
   iconFontNames: ['FontAwesome.ttf', 'Feather.ttf']

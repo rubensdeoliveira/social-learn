@@ -137,7 +137,7 @@ const SignIn: React.FC = () => {
             <ButtonText>Criar uma conta</ButtonText>
           </CreateAccount>
 
-          <ForgotPassword>
+          <ForgotPassword onPress={() => navigation.navigate('RecoverPass')}>
             <ButtonText>Esqueci minha senha</ButtonText>
           </ForgotPassword>
         </Container>
