@@ -7,17 +7,16 @@ import {
   Platform,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
-import * as Yup from 'yup'
 import axios from 'axios'
 import api from '../../services/api'
 import { AUTH_BASE_URL, API_KEY } from '../../env.js'
 
-import getValidationErrors from '../../utils/getValidationErrors'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 
@@ -37,7 +36,7 @@ import logoImg from '../../assets/logo.png'
 interface SignUpFormData {
   name: string
   username: string
-  college: string
+  college?: string
   email: string
   password: string
   gender: string
@@ -50,6 +49,7 @@ const SignUp: React.FC = () => {
   const [gender, setGender] = useState(null)
   const [occupation, setOccupation] = useState(null)
   const [birthday, setBirthday] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const usernameInputRef = useRef<TextInput>(null)
   const emailInputRef = useRef<TextInput>(null)
@@ -69,8 +69,16 @@ const SignUp: React.FC = () => {
         return false
       }
 
-      if (data.username.trim() === '') {
-        Alert.alert('Erro', 'Preencha o seu nome de usuário para continuar')
+      if (data.username.trim().length < 5) {
+        Alert.alert(
+          'Erro',
+          'Preencha o seu nome de usuário com pelo menos 5 caracteres para continuar',
+        )
+        return false
+      }
+
+      if (data.username.trim().includes(' ')) {
+        Alert.alert('Erro', 'Nome de usuário não deve conter espaços')
         return false
       }
 
@@ -119,30 +127,52 @@ const SignUp: React.FC = () => {
 
   const handleSignUp = useCallback(
     async (data: SignUpFormData) => {
+      setLoading(true)
+
       try {
         formRef.current?.setErrors({})
 
-        if (!validations(data)) return
+        if (!validations(data)) {
+          setLoading(false)
+          return
+        }
+
+        const responseUsers = await api.get('users.json')
+        const users = responseUsers.data
+        const usersKeys = Object.keys(users)
+
+        const findUserWithSameUsername = usersKeys.find(
+          (userKey: string) => users[userKey].username === data.username,
+        )
+
+        if (findUserWithSameUsername) {
+          Alert.alert('Erro', 'Já existe um usuário com o mesmo username')
+          return
+        }
 
         const response = await axios.post(
           `${AUTH_BASE_URL}/signupNewUser?key=${API_KEY}`,
           {
-            email: data.email,
-            password: data.password,
+            email: data.email.trim(),
+            password: data.password.trim(),
             returnSecureToken: true,
           },
         )
 
         if (response.data.localId) {
           await api.put(`/users/${response.data.localId}.json`, {
+            username: data.username.trim(),
+            college: data.college,
+            isModerator: false,
+          })
+
+          await api.put(`/usersprivate/${response.data.localId}.json`, {
             name: data.name,
-            username: data.username,
             occupation: data.occupation,
             city: data.city,
             college: data.college,
             birthday,
             gender,
-            isModerator: false,
           })
         }
 
@@ -153,19 +183,10 @@ const SignUp: React.FC = () => {
 
         navigation.goBack()
       } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err)
-
-          formRef.current?.setErrors(errors)
-
-          return
-        }
-
-        Alert.alert(
-          'Erro no cadastro',
-          'Ocorreu um erro ao fazer cadastro, tente novamente',
-        )
+        Alert.alert('Erro no cadastro', err.message)
       }
+
+      setLoading(false)
     },
     [navigation, validations, gender, birthday],
   )
@@ -186,6 +207,7 @@ const SignUp: React.FC = () => {
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
+                maxLength={100}
                 autoCapitalize="words"
                 name="name"
                 icon="no-icon"
@@ -197,6 +219,7 @@ const SignUp: React.FC = () => {
               />
 
               <Input
+                maxLength={20}
                 ref={usernameInputRef}
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -246,6 +269,7 @@ const SignUp: React.FC = () => {
               </TextInputMaskContainer>
 
               <Input
+                maxLength={50}
                 ref={cityInputRef}
                 autoCapitalize="words"
                 name="city"
@@ -281,6 +305,7 @@ const SignUp: React.FC = () => {
               </PickerContainer>
 
               <Input
+                maxLength={100}
                 ref={collegeInputRef}
                 name="college"
                 icon="no-icon"
@@ -325,6 +350,14 @@ const SignUp: React.FC = () => {
                 Cadastrar
               </Button>
             </Form>
+
+            {loading && (
+              <ActivityIndicator
+                size={40}
+                color="#ff6b6b"
+                style={{ marginTop: 10 }}
+              />
+            )}
 
             <BackToSignIn onPress={() => navigation.navigate('SignIn')}>
               <BackToSignInText>voltar para login</BackToSignInText>
