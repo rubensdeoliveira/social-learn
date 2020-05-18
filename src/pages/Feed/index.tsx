@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native'
-import { Alert } from 'react-native'
+import { Alert, View } from 'react-native'
 
 import api from '../../services/api'
 
@@ -9,15 +9,25 @@ import Header from '../../components/Header'
 
 import { Container, List } from './styles'
 
-interface CommentData {
-  username: string
-  comment: string
+interface ChoiceData {
+  choiceA: string
+  choiceB: string
+  choiceC?: string
+  choiceD?: string
 }
 
-interface PostData {
-  comments: CommentData[]
-  user: UserData
-  question: QuestionData
+interface QuestionData {
+  image?: string
+  description: string
+  correctChoice: string
+  categorie: string
+  choices: ChoiceData
+}
+
+interface CommentData {
+  email: string
+  username: string
+  comment: string
   created_at: string
   id: string
 }
@@ -27,8 +37,12 @@ interface UserData {
   email: string
 }
 
-interface QuestionData {
-  image: string
+interface PostData {
+  comments: CommentData[]
+  user: UserData
+  question: QuestionData
+  created_at: string
+  id: string
 }
 
 const Feed: React.FC = () => {
@@ -75,8 +89,12 @@ const Feed: React.FC = () => {
     <Container>
       <Header title={categorie} />
       <List
+        ListFooterComponent={<View />}
+        ListFooterComponentStyle={{
+          height: 10,
+        }}
         data={posts}
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }: { item: PostData }) => <Post {...item} />}
       />
     </Container>
