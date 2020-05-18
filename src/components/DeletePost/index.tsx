@@ -7,7 +7,11 @@ import { useAuth } from '../../hooks/auth'
 
 import { Container } from './styles'
 
-const DeletePost: React.FC = ({ id }) => {
+interface DeletePostProps {
+  id: string
+}
+
+const DeletePost: React.FC<DeletePostProps> = ({ id }) => {
   const { token, user } = useAuth()
   const navigation = useNavigation()
 
