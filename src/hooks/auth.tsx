@@ -7,13 +7,28 @@ import React, {
 } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
+import queryString from 'query-string'
 import api from '../services/api'
 import { AUTH_BASE_URL, API_KEY, REFRESH_TOKEN_URL } from '../env.js'
+
+interface UserData {
+  id: string
+  birthday: string
+  city: string
+  college: string
+  gender: string
+  image: string
+  isModerator: boolean
+  name: string
+  username: string
+  userAnswers: UserAnswersState
+  email: string
+}
 
 interface AuthState {
   refresh_token: string
   token: string
-  user: Object
+  user: UserData
 }
 
 interface SingInCredentials {
@@ -27,15 +42,15 @@ interface AnswerState {
 }
 
 interface UserAnswersState {
-  userAnswers?: AnswerState[]
+  userAnswers?: Array<AnswerState>
 }
 
 interface AuthContextData {
   userAnswers: UserAnswersState
-  user: Object
+  user: UserData
   loading: boolean
   signIn(credentials: SingInCredentials): Promise<void>
-  setUserAnswersValue(userAnswersValue: UserAnswersState): void
+  setUserAnswersValue(userAnswersValue: UserAnswersState): Promise<void>
   signOut(): void
   modifyUser(user: Object): Promise<void>
   token: string
@@ -65,28 +80,29 @@ const AuthProvider: React.FC = ({ children }) => {
       ])
 
       if (token[1] && refreshtoken[1] && user[1] && userAnswersFromAsync[1]) {
-        const response = await axios.post(
-          `${REFRESH_TOKEN_URL}/token?key=${API_KEY}`,
-          JSON.stringify({
-            grant_type: 'refresh_token',
-            refresh_token: refreshtoken[1],
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
+        try {
+          const response = await axios.post(
+            `${REFRESH_TOKEN_URL}/token?key=${API_KEY}`,
+            queryString.stringify({
+              grant_type: 'refresh_token',
+              refresh_token: refreshtoken[1],
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
             },
-          },
-        )
+          )
 
-        console.log(response.data.id_token)
-        console.log(refreshtoken[1])
-
-        setData({
-          token: response.data.id_token,
-          refresh_token: refreshtoken[1],
-          user: JSON.parse(user[1]),
-        })
-        setUserAnswers(JSON.parse(userAnswersFromAsync[1]))
+          if (response.data.id_token) {
+            setData({
+              token: response.data.id_token,
+              refresh_token: refreshtoken[1],
+              user: JSON.parse(user[1]),
+            })
+            setUserAnswers(JSON.parse(userAnswersFromAsync[1]))
+          }
+        } catch {}
       }
 
       setLoading(false)
@@ -139,13 +155,13 @@ const AuthProvider: React.FC = ({ children }) => {
       }
 
       await AsyncStorage.multiSet([
-        ['@GoBarber:refreshtoken', refresh_token],
         ['@GoBarber:token', token],
+        ['@GoBarber:refreshtoken', refresh_token],
         ['@GoBarber:user', JSON.stringify(user)],
         ['@GoBarber:useranswers', JSON.stringify(userAnswersData)],
       ])
 
-      setData({ token, user, refresh_token })
+      setData({ token, refresh_token, user })
       setUserAnswers(userAnswersData)
     }
   }, [])
@@ -153,9 +169,9 @@ const AuthProvider: React.FC = ({ children }) => {
   const signOut = useCallback(async () => {
     await AsyncStorage.multiRemove([
       '@GoBarber:token',
+      '@GoBarber:refreshtoken',
       '@GoBarber:user',
       '@GoBarber:useranswers',
-      '@GoBarber:refreshtoken',
     ])
 
     setData({} as AuthState)
