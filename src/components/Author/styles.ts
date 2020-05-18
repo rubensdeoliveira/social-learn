@@ -1,13 +1,11 @@
 import styled from 'styled-components/native'
 
-import { Gravatar } from 'react-native-gravatar'
-
 export const Container = styled.View`
   flex-direction: row;
   align-items: center;
 `
 
-export const GravatarImage = styled(Gravatar)`
+export const Image = styled.Image`
   width: 30px;
   height: 30px;
   border-radius: 15px;
