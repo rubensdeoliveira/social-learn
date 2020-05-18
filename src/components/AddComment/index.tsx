@@ -14,7 +14,11 @@ import {
   CommentText,
 } from './styles'
 
-const AddComment: React.FC = ({ id }) => {
+interface AddComentProps {
+  id: string
+}
+
+const AddComment: React.FC<AddComentProps> = ({ id }) => {
   const [comment, setComment] = useState('')
   const [editMode, setEditMode] = useState(false)
 
@@ -29,7 +33,7 @@ const AddComment: React.FC = ({ id }) => {
       comments.push({
         comment,
         username: user.username,
-        email: user.email,
+        userId: user.id,
         created_at: new Date(),
         id: Math.random().toString(36).substr(2, 9),
       })
@@ -59,13 +63,18 @@ const AddComment: React.FC = ({ id }) => {
       {editMode ? (
         <CommentContainer>
           <CommentInput
-            placeholder="Digite um comentário..."
+            placeholder={
+              user
+                ? 'Digite um comentário...'
+                : 'Você precisa estar logado para comentar...'
+            }
             value={comment}
-            onChangeText={(commentText) =>
+            onChangeText={(commentText: string) =>
               handleCommentInputChange(commentText)
             }
             onSubmitEditing={handleAddComment}
             autoFocus
+            editable={!!user}
           />
 
           <EditModeButton onPress={handleEditModePress}>
@@ -76,7 +85,11 @@ const AddComment: React.FC = ({ id }) => {
         <EditModeButton onPress={handleEditModePress}>
           <CommentContainer>
             <Icon name="comment-o" size={25} color="#555" />
-            <CommentText>Adicione um comentário</CommentText>
+            <CommentText>
+              {user
+                ? 'Adicione um comentário'
+                : 'Você precisa estar logado para comentar...'}
+            </CommentText>
           </CommentContainer>
         </EditModeButton>
       )}

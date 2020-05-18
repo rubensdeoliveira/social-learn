@@ -8,9 +8,10 @@ import React, {
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import api from '../services/api'
-import { AUTH_BASE_URL, API_KEY } from '../env.js'
+import { AUTH_BASE_URL, API_KEY, REFRESH_TOKEN_URL } from '../env.js'
 
 interface AuthState {
+  refresh_token: string
   token: string
   user: Object
 }
@@ -51,14 +52,40 @@ const AuthProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
-      const [token, user, userAnswersFromAsync] = await AsyncStorage.multiGet([
+      const [
+        token,
+        refreshtoken,
+        user,
+        userAnswersFromAsync,
+      ] = await AsyncStorage.multiGet([
         '@GoBarber:token',
+        '@GoBarber:refreshtoken',
         '@GoBarber:user',
         '@GoBarber:useranswers',
       ])
 
-      if (token[1] && user[1] && userAnswersFromAsync[1]) {
-        setData({ token: token[1], user: JSON.parse(user[1]) })
+      if (token[1] && refreshtoken[1] && user[1] && userAnswersFromAsync[1]) {
+        const response = await axios.post(
+          `${REFRESH_TOKEN_URL}/token?key=${API_KEY}`,
+          JSON.stringify({
+            grant_type: 'refresh_token',
+            refresh_token: refreshtoken[1],
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          },
+        )
+
+        console.log(response.data.id_token)
+        console.log(refreshtoken[1])
+
+        setData({
+          token: response.data.id_token,
+          refresh_token: refreshtoken[1],
+          user: JSON.parse(user[1]),
+        })
         setUserAnswers(JSON.parse(userAnswersFromAsync[1]))
       }
 
@@ -80,7 +107,7 @@ const AuthProvider: React.FC = ({ children }) => {
     async (user) => {
       await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user))
 
-      setData({ user, token: data.token })
+      setData({ user, token: data.token, refresh_token: data.refresh_token })
     },
     [data],
   )
@@ -104,6 +131,7 @@ const AuthProvider: React.FC = ({ children }) => {
         id: response.data.localId,
       }
       const token = response.data.idToken
+      const refresh_token = response.data.refreshToken
       let userAnswersData = responseUser.data.userAnswers
 
       if (userAnswersData == null) {
@@ -111,18 +139,24 @@ const AuthProvider: React.FC = ({ children }) => {
       }
 
       await AsyncStorage.multiSet([
+        ['@GoBarber:refreshtoken', refresh_token],
         ['@GoBarber:token', token],
         ['@GoBarber:user', JSON.stringify(user)],
         ['@GoBarber:useranswers', JSON.stringify(userAnswersData)],
       ])
 
-      setData({ token, user })
+      setData({ token, user, refresh_token })
       setUserAnswers(userAnswersData)
     }
   }, [])
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.multiRemove(['@GoBarber:token', '@GoBarber:user'])
+    await AsyncStorage.multiRemove([
+      '@GoBarber:token',
+      '@GoBarber:user',
+      '@GoBarber:useranswers',
+      '@GoBarber:refreshtoken',
+    ])
 
     setData({} as AuthState)
   }, [])
