@@ -25,7 +25,7 @@ const TabRouter: React.FC = () => {
           if (route.name === 'Feed') {
             iconName = 'home'
           } else if (route.name === 'AddPhoto') {
-            iconName = 'camera'
+            iconName = 'question-circle'
           } else if (route.name === 'Profile') {
             iconName = 'user'
           } else {
