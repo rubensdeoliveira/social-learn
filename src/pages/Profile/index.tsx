@@ -2,13 +2,14 @@ import React, { useCallback } from 'react'
 import { Alert } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 import axios from 'axios'
+import { useNavigation } from '@react-navigation/native'
 import {
   Container,
   Image,
   Username,
   College,
-  EditPhoto,
-  EditPhotoText,
+  Edit,
+  EditText,
   SaveButton,
   EmptyPhoto,
 } from './styles'
@@ -29,6 +30,7 @@ interface ImageProps {
 
 const Profile: React.FC = () => {
   const { signOut, user, token, modifyUser } = useAuth()
+  const navigation = useNavigation()
 
   const handlePickImage = useCallback(() => {
     ImagePicker.showImagePicker(
@@ -73,11 +75,18 @@ const Profile: React.FC = () => {
       ) : (
         <EmptyPhoto />
       )}
-      <EditPhoto onPress={handlePickImage}>
-        <EditPhotoText>Editar foto</EditPhotoText>
-      </EditPhoto>
+      <Edit onPress={handlePickImage}>
+        <EditText>Alterar foto</EditText>
+      </Edit>
       <Username>{user.username}</Username>
       {user && user.college ? <College>{user.college}</College> : null}
+      <Edit
+        onPress={() => {
+          navigation.navigate('EditInfo')
+        }}
+      >
+        <EditText>Alterar informações</EditText>
+      </Edit>
       <SaveButton onPress={handleLogout}>Sair</SaveButton>
     </Container>
   )

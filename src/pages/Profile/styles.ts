@@ -23,24 +23,29 @@ export const Image = styled.Image`
   margin-top: 60px;
 `
 
-export const EditPhoto = styled.TouchableOpacity`
+export const Edit = styled.TouchableOpacity`
   margin-top: 10px;
 `
 
-export const EditPhotoText = styled.Text`
-  font-family: 'Poppins-Bold';
-  font-size: 16px;
+export const EditText = styled.Text`
+  font-family: 'Poppins-Regular';
+  font-size: 12px;
+  color: #333;
 `
 
 export const Username = styled.Text`
-  margin-top: 50px;
+  margin-top: 30px;
   font-size: 30px;
   font-family: 'Poppins-Bold';
+  text-align: center;
+  color: #000;
 `
 
 export const College = styled.Text`
   font-size: 25px;
   font-family: 'Poppins-Regular';
+  text-align: center;
+  color: #000;
 `
 
 export const SaveButton = styled(Button)`

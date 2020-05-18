@@ -22,4 +22,5 @@ export const MenuItemText = styled.Text`
   font-family: 'Poppins-Bold';
   margin-top: 10px;
   font-size: 15px;
+  color: #000;
 `
