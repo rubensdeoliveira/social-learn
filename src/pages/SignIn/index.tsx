@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import {
   Image,
   View,
@@ -7,6 +7,7 @@ import {
   Platform,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Form } from '@unform/mobile'
@@ -35,6 +36,8 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
+  const [loading, setLoading] = useState(false)
+
   const passwordInputRef = useRef<TextInput>(null)
 
   const formRef = useRef<FormHandles>(null)
@@ -45,6 +48,7 @@ const SignIn: React.FC = () => {
 
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
+      setLoading(true)
       try {
         formRef.current?.setErrors({})
 
@@ -69,6 +73,8 @@ const SignIn: React.FC = () => {
 
           formRef.current?.setErrors(errors)
 
+          setLoading(false)
+
           return
         }
 
@@ -77,6 +83,8 @@ const SignIn: React.FC = () => {
           'Ocorreu um erro ao fazer login, cheque as credenciais',
         )
       }
+
+      setLoading(false)
     },
     [signIn],
   )
@@ -132,6 +140,14 @@ const SignIn: React.FC = () => {
               Entrar
             </Button>
           </Form>
+
+          {loading && (
+            <ActivityIndicator
+              size={40}
+              color="#ff6b6b"
+              style={{ marginTop: 10 }}
+            />
+          )}
 
           <CreateAccount onPress={() => navigation.navigate('SignUp')}>
             <ButtonText>Criar uma conta</ButtonText>
