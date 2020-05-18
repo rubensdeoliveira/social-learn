@@ -4,13 +4,8 @@ import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Container, SeeAllText, SeeAllCommentContainer } from './styles'
 
-interface CommentObject {
-  username: string
-  comment: string
-}
-
 interface CommentProps {
-  comments: CommentObject[]
+  id: string
 }
 
 const SeeComments: React.FC<CommentProps> = ({ id }) => {
