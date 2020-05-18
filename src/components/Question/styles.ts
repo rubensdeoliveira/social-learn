@@ -17,7 +17,7 @@ export const Description = styled.Text`
 export const Choice = styled.TouchableOpacity`
   margin: 5px 0;
   padding: 10px;
-  background-color: #ff6b6b;
+  background-color: #327fbc;
   width: 90%;
   justify-content: center;
   border-radius: 5px;

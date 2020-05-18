@@ -14,12 +14,12 @@ import Header from '../../components/Header'
 
 const Main: React.FC = () => {
   const [menuItens] = useState([
-    { name: 'Odontogênese', icon: Odontogenese },
-    { name: 'Esmalte', icon: Esmalte },
-    { name: 'Dentina e Polpa', icon: DentinaPolpa },
-    { name: 'Periodonto', icon: Periodonto },
-    { name: 'Mucosa Oral', icon: MucosaOral },
-    { name: 'Glândulas Salivares', icon: GlandulasSalivares },
+    { name: 'Esportes', icon: Odontogenese },
+    { name: 'Música', icon: Esmalte },
+    { name: 'Ciência', icon: DentinaPolpa },
+    { name: 'Entretenimento', icon: Periodonto },
+    { name: 'Curiosidades', icon: MucosaOral },
+    { name: 'Mundo Geek', icon: GlandulasSalivares },
   ])
 
   const navigation = useNavigation()

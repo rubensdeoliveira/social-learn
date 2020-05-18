@@ -9,7 +9,7 @@ import FeedRoutes from './feed.routes'
 import AuthRoutes from './auth.routes'
 import AppRoutes from './app.routes'
 
-import AddPhoto from '../pages/AddPhoto'
+import AddQuestion from '../pages/AddQuestion'
 
 const Tab = createBottomTabNavigator()
 
@@ -24,7 +24,7 @@ const TabRouter: React.FC = () => {
 
           if (route.name === 'Feed') {
             iconName = 'home'
-          } else if (route.name === 'AddPhoto') {
+          } else if (route.name === 'AddQuestion') {
             iconName = 'question-circle'
           } else if (route.name === 'Profile') {
             iconName = 'user'
@@ -36,14 +36,14 @@ const TabRouter: React.FC = () => {
         },
       })}
       tabBarOptions={{
-        activeTintColor: '#ff6b6b',
+        activeTintColor: '#327fbc',
         inactiveTintColor: 'gray',
         showLabel: false,
       }}
     >
       <Tab.Screen name="Feed" component={FeedRoutes} />
       {!user || !user.isModerator ? null : (
-        <Tab.Screen name="AddPhoto" component={AddPhoto} />
+        <Tab.Screen name="AddQuestion" component={AddQuestion} />
       )}
       <Tab.Screen name="Profile" component={user ? AppRoutes : AuthRoutes} />
     </Tab.Navigator>

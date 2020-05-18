@@ -144,7 +144,7 @@ const SignIn: React.FC = () => {
           {loading && (
             <ActivityIndicator
               size={40}
-              color="#ff6b6b"
+              color="#327fbc"
               style={{ marginTop: 10 }}
             />
           )}

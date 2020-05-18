@@ -27,6 +27,7 @@
     "import/no-duplicates": "off",
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-empty-function": "off",
     "react/jsx-curly-newline": "off",
     "prettier/prettier": "error",
     "react/jsx-one-expression-per-line": "off",

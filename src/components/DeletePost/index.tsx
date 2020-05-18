@@ -54,7 +54,7 @@ const DeletePost: React.FC<DeletePostProps> = ({ id }) => {
     <>
       {user && user.isModerator && (
         <Container onPress={handleDeletePost}>
-          <Icon name="trash-2" size={30} color="#ff6b6b" />
+          <Icon name="trash-2" size={30} color="#327fbc" />
         </Container>
       )}
     </>

@@ -31,7 +31,7 @@ interface ImageProps {
   uri: string
 }
 
-const AddPhoto: React.FC = () => {
+const AddQuestion: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [image, setImage] = useState({} as ImageProps)
   const [choices, setChoices] = useState([{ text: '' }, { text: '' }])
@@ -212,10 +212,10 @@ const AddPhoto: React.FC = () => {
           <ChoiceContainer>
             <ChoiceLabel>Alternativas:</ChoiceLabel>
             <ChoiceAdd onPress={handleAddChoice}>
-              <Icon size={30} name="plus-circle" color="#ff6b6b" />
+              <Icon size={30} name="plus-circle" color="#327fbc" />
             </ChoiceAdd>
             <ChoiceRemove onPress={handleRemoveChoice}>
-              <Icon size={30} name="minus-circle" color="#ff6b6b" />
+              <Icon size={30} name="minus-circle" color="#327fbc" />
             </ChoiceRemove>
           </ChoiceContainer>
 
@@ -255,15 +255,12 @@ const AddPhoto: React.FC = () => {
               }
             >
               <Picker.Item label="Selecione a categoria..." value={null} />
-              <Picker.Item label="Odontogênese" value="Odontogênese" />
-              <Picker.Item label="Esmalte" value="Esmalte" />
-              <Picker.Item label="Dentina e Polpa" value="Dentina e Polpa" />
-              <Picker.Item label="Periodonto" value="Periodonto" />
-              <Picker.Item label="Mucosa Oral" value="Mucosa Oral" />
-              <Picker.Item
-                label="Glândulas Salivares"
-                value="Glândulas Salivares"
-              />
+              <Picker.Item label="Esportes" value="Esportes" />
+              <Picker.Item label="Música" value="Música" />
+              <Picker.Item label="Ciência" value="Ciência" />
+              <Picker.Item label="Entretenimento" value="Entretenimento" />
+              <Picker.Item label="Curiosidades" value="Curiosidades" />
+              <Picker.Item label="Mundo Geek" value="Mundo Geek" />
             </Picker>
           </PickerContainer>
 
@@ -279,7 +276,7 @@ const AddPhoto: React.FC = () => {
           {loading && (
             <ActivityIndicator
               size={40}
-              color="#ff6b6b"
+              color="#327fbc"
               style={{ marginTop: 10 }}
             />
           )}
@@ -289,4 +286,4 @@ const AddPhoto: React.FC = () => {
   )
 }
 
-export default AddPhoto
+export default AddQuestion
