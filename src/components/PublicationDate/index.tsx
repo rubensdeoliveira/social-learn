@@ -1,7 +1,7 @@
 import React from 'react'
 
-import moment from 'moment'
-import 'moment/min/locales'
+import { format, parseISO } from 'date-fns'
+import pt from 'date-fns/locale/pt'
 
 import { Container } from './styles'
 
@@ -10,8 +10,14 @@ interface PublicationDateParams {
 }
 
 const PublicationDate: React.FC<PublicationDateParams> = ({ created_at }) => {
-  moment.locale('pt-Br')
-  return <Container>{moment(created_at).calendar()}</Container>
+  const dateFormatted = format(
+    parseISO(created_at),
+    "d 'de' MMMM 'de' yyyy', às' HH:mm",
+    {
+      locale: pt,
+    },
+  )
+  return <Container>{dateFormatted}</Container>
 }
 
 export default PublicationDate
