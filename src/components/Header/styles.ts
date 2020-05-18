@@ -6,7 +6,7 @@ export const Container = styled.View`
   margin-top: ${Platform.OS === 'ios' ? 20 : 0}px;
   padding: 10px;
   border-bottom-width: 1px;
-  border-color: #bbb;
+  border-color: #eee;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
@@ -34,6 +34,7 @@ export const Title = styled.Text`
 export const UserContainer = styled.View`
   flex-direction: row;
   align-items: center;
+  padding-left: 5px;
 `
 
 export const Username = styled.Text`
