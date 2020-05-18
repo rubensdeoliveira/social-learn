@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react'
 import ImagePicker from 'react-native-image-picker'
-import { Alert, ScrollView } from 'react-native'
+import { Alert, ScrollView, ActivityIndicator } from 'react-native'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/Feather'
@@ -32,6 +32,7 @@ interface ImageProps {
 }
 
 const AddPhoto: React.FC = () => {
+  const [loading, setLoading] = useState(false)
   const [image, setImage] = useState({} as ImageProps)
   const [choices, setChoices] = useState([{ text: '' }, { text: '' }])
   const [questionCategorie, setQuestionCategorie] = useState('')
@@ -115,8 +116,13 @@ const AddPhoto: React.FC = () => {
 
   const handleCreateQuestion = useCallback(
     async (data) => {
+      setLoading(true)
+
       try {
-        if (!validations(data)) return
+        if (!validations(data)) {
+          setLoading(false)
+          return
+        }
 
         let imageData = null
         if (image.base64) {
@@ -150,6 +156,8 @@ const AddPhoto: React.FC = () => {
       } catch (err) {
         Alert.alert('Erro ao criar pergunta', err.message)
       }
+
+      setLoading(false)
     },
     [
       validations,
@@ -191,11 +199,15 @@ const AddPhoto: React.FC = () => {
         </ImageContainer>
 
         <PhotoButton onPress={handlePickImage}>
-          <Icon name="camera" size={40} />
+          <Icon name="camera" size={40} color="#000" />
         </PhotoButton>
 
         <Form ref={formRef} onSubmit={handleCreateQuestion}>
-          <Input icon="help-circle" name="description" />
+          <Input
+            icon="help-circle"
+            name="description"
+            placeholder="Título da pergunta"
+          />
 
           <ChoiceContainer>
             <ChoiceLabel>Alternativas:</ChoiceLabel>
@@ -219,7 +231,7 @@ const AddPhoto: React.FC = () => {
           <PickerContainer>
             <Picker
               selectedValue={correctChoice}
-              onValueChange={(choice) => setCorrectChoice(choice)}
+              onValueChange={(choice: string) => setCorrectChoice(choice)}
             >
               <Picker.Item
                 label="Selecione a alternativa correta..."
@@ -238,7 +250,9 @@ const AddPhoto: React.FC = () => {
           <PickerContainer>
             <Picker
               selectedValue={questionCategorie}
-              onValueChange={(categorie) => setQuestionCategorie(categorie)}
+              onValueChange={(categorie: string) =>
+                setQuestionCategorie(categorie)
+              }
             >
               <Picker.Item label="Selecione a categoria..." value={null} />
               <Picker.Item label="Odontogênese" value="Odontogênese" />
@@ -261,6 +275,14 @@ const AddPhoto: React.FC = () => {
           >
             Salvar
           </Button>
+
+          {loading && (
+            <ActivityIndicator
+              size={40}
+              color="#ff6b6b"
+              style={{ marginTop: 10 }}
+            />
+          )}
         </Form>
       </Container>
     </ScrollView>

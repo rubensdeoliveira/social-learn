@@ -12,6 +12,7 @@ export const Container = styled.View`
 export const Title = styled.Text`
   font-size: 20px;
   font-family: 'Poppins-Bold';
+  color: #000;
 `
 
 export const ImageContainer = styled.View`
@@ -34,6 +35,7 @@ export const PhotoButton = styled.TouchableOpacity`
 
 export const ChoiceContainer = styled.View`
   flex-direction: row;
+  align-items: center;
   font-size: 20px;
   color: #fff;
   font-family: 'Poppins-Regular';
@@ -42,9 +44,10 @@ export const ChoiceContainer = styled.View`
 `
 
 export const ChoiceLabel = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   font-family: 'Poppins-Bold';
   margin-right: 10px;
+  color: #333;
 `
 
 export const ChoiceAdd = styled.TouchableOpacity`
