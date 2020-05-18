@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Alert } from 'react-native'
 import api from '../../services/api'
 import { useAuth } from '../../hooks/auth'
@@ -8,11 +8,36 @@ import Modal from '../Modal'
 
 import { Container, Description, Choice, ChoiceText } from './styles'
 
-interface QuestionData {
-  description: string
+interface ChoiceData {
+  choiceA: string
+  choiceB: string
+  choiceC?: string
+  choiceD?: string
 }
 
-const Question: React.FC<QuestionData> = ({ question, id }) => {
+interface QuestionData {
+  image?: string
+  description: string
+  correctChoice: string
+  categorie: string
+  choices: ChoiceData
+}
+
+interface QuestionProps {
+  question: QuestionData
+  id: string
+}
+
+interface AnswerState {
+  idQuestion: string
+  correct: boolean
+}
+
+interface UserAnswersState {
+  userAnswers?: AnswerState[]
+}
+
+const Question: React.FC<QuestionProps> = ({ question, id }) => {
   const choices = Object.keys(question.choices)
 
   const { user, token, setUserAnswersValue } = useAuth()
@@ -26,17 +51,16 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
         const { userAnswers } = response.data
 
         if (userAnswers == null) {
-          const userAnswersValue = [
-            { idQuestion: id, correct: userAnswerCorrected },
-          ]
+          const responseAnswer = await api.patch(
+            `users/${user.id}.json?auth=${token}`,
+            {
+              userAnswers: [{ idQuestion: id, correct: userAnswerCorrected }],
+            },
+          )
 
-          await api.patch(`users/${user.id}.json?auth=${token}`, {
-            userAnswers: userAnswersValue,
-          })
-
-          await setUserAnswersValue(userAnswersValue)
+          await setUserAnswersValue(responseAnswer.data.userAnswers)
         } else {
-          const findIndex = userAnswers.findIndex((answer) => {
+          const findIndex = userAnswers.findIndex((answer: AnswerState) => {
             return answer.idQuestion === id
           })
 
@@ -44,22 +68,30 @@ const Question: React.FC<QuestionData> = ({ question, id }) => {
             userAnswers.splice(findIndex, 1)
           }
 
-          const userAnswersValue = [
-            ...userAnswers,
-            { idQuestion: id, correct: userAnswerCorrected },
-          ]
+          const responseAnswer = await api.patch(
+            `users/${user.id}.json?auth=${token}`,
+            {
+              userAnswers: [
+                ...userAnswers,
+                { idQuestion: id, correct: userAnswerCorrected },
+              ],
+            },
+          )
 
-          await api.patch(`users/${user.id}.json?auth=${token}`, {
-            userAnswers: userAnswersValue,
-          })
-
-          await setUserAnswersValue(userAnswersValue)
+          await setUserAnswersValue(responseAnswer.data.userAnswers)
         }
 
         setRightAnswerValue(userAnswerCorrected)
         changeVisibility(true)
       } catch {
-        Alert.alert('Ocorreu um erro', 'Tente responder a pergunta novamente')
+        if (!user) {
+          Alert.alert(
+            'Erro',
+            'Você precisa estar logado para responder a pergunta',
+          )
+        } else {
+          Alert.alert('Ocorreu um erro', 'Tente responder a pergunta novamente')
+        }
       }
     },
     [
