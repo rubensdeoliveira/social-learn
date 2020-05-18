@@ -1,6 +1,6 @@
-import React, { useRef, useCallback } from 'react'
+import React, { useRef, useCallback, useState } from 'react'
 import firebase from 'react-native-firebase'
-import { Image, View, TextInput, Alert } from 'react-native'
+import { Image, View, TextInput, Alert, ActivityIndicator } from 'react-native'
 import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
 import { useNavigation } from '@react-navigation/native'
@@ -10,6 +10,8 @@ import Input from '../../components/Input'
 import Button from '../../components/Button'
 
 const RecoverPass: React.FC = () => {
+  const [loading, setLoading] = useState(false)
+
   const recoverInputRef = useRef<TextInput>(null)
 
   const formRef = useRef<FormHandles>(null)
@@ -18,6 +20,7 @@ const RecoverPass: React.FC = () => {
 
   const handleRecoverPass = useCallback(
     async (data) => {
+      setLoading(true)
       try {
         await firebase.auth().sendPasswordResetEmail(data.email)
         Alert.alert(
@@ -28,9 +31,10 @@ const RecoverPass: React.FC = () => {
       } catch {
         Alert.alert(
           'Falha',
-          'Ocorreu um erro inesperado, tente novamente mais tarde',
+          'Falha ao recuperar conta, verifique seu e-mail e tente novamente',
         )
       }
+      setLoading(false)
     },
     [navigation],
   )
@@ -66,6 +70,14 @@ const RecoverPass: React.FC = () => {
           Recuperar
         </Button>
       </Form>
+
+      {loading && (
+        <ActivityIndicator
+          size={40}
+          color="#ff6b6b"
+          style={{ marginTop: 10 }}
+        />
+      )}
 
       <BackToSignIn onPress={() => navigation.navigate('SignIn')}>
         <BackToSignInText>voltar para login</BackToSignInText>
