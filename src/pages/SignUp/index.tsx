@@ -29,14 +29,9 @@ import logoImg from '../../assets/logo.png'
 interface SignUpFormData {
   name: string
   username: string
-  college?: string
   email: string
   password: string
   repeatPassword: string
-  gender: string
-  occupation: string
-  birthday: string
-  city: string
 }
 
 const SignUp: React.FC = () => {
