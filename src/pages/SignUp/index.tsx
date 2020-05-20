@@ -9,7 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native'
-
+import * as Yup from 'yup'
 import { useNavigation } from '@react-navigation/native'
 import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
@@ -20,16 +20,9 @@ import { AUTH_BASE_URL, API_KEY } from '../../env.js'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 
-import {
-  Container,
-  Title,
-  BackToSignIn,
-  BackToSignInText,
-  PickerContainer,
-  Picker,
-  TextInputMaskContainer,
-  TextInputMask,
-} from './styles'
+import getValidationErrors from '../../utils/getValidationErrors'
+
+import { Container, Title, BackToSignIn, BackToSignInText } from './styles'
 
 import logoImg from '../../assets/logo.png'
 
@@ -39,6 +32,7 @@ interface SignUpFormData {
   college?: string
   email: string
   password: string
+  repeatPassword: string
   gender: string
   occupation: string
   birthday: string
@@ -46,84 +40,16 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
-  const [gender, setGender] = useState(null)
-  const [occupation, setOccupation] = useState(null)
-  const [birthday, setBirthday] = useState('')
   const [loading, setLoading] = useState(false)
 
   const usernameInputRef = useRef<TextInput>(null)
   const emailInputRef = useRef<TextInput>(null)
-  const cityInputRef = useRef<TextInput>(null)
-  const collegeInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
   const repeatPasswordInputRef = useRef<TextInput>(null)
 
   const formRef = useRef<FormHandles>(null)
 
   const navigation = useNavigation()
-
-  const validations = useCallback(
-    (data): boolean => {
-      if (data.name.trim() === '') {
-        Alert.alert('Erro', 'Preencha o seu nome para continuar')
-        return false
-      }
-
-      if (data.username.trim().length < 5) {
-        Alert.alert(
-          'Erro',
-          'Preencha o seu nome de usuário com pelo menos 5 caracteres para continuar',
-        )
-        return false
-      }
-
-      if (data.username.trim().includes(' ')) {
-        Alert.alert('Erro', 'Nome de usuário não deve conter espaços')
-        return false
-      }
-
-      if (data.email.trim() === '') {
-        Alert.alert('Erro', 'Preencha o seu e-mail para continuar')
-        return false
-      }
-
-      if (gender == null) {
-        Alert.alert('Erro', 'Selecione seu sexo para continuar')
-        return false
-      }
-
-      if (birthday.length < 10) {
-        Alert.alert('Erro', 'Digite sua data de nascimento')
-        return false
-      }
-
-      if (data.city.trim() === '') {
-        Alert.alert('Erro', 'Preencha a sua cidade/UF para continuar')
-        return false
-      }
-
-      if (occupation == null) {
-        Alert.alert(
-          'Erro',
-          'Selecione qual opção você se encaixa: estudante de odontologia, professor de odontologia ou outro',
-        )
-        return false
-      }
-
-      if (data.password.trim().length < 8) {
-        Alert.alert('Erro', 'Preencha uma senha de pelo menos 8 dígitos')
-        return false
-      }
-
-      if (data.repeatPassword !== data.password) {
-        Alert.alert('Erro', 'As senhas digitadas não coincidem')
-        return false
-      }
-
-      return true
-    },
-    [gender, occupation, birthday],
-  )
 
   const handleSignUp = useCallback(
     async (data: SignUpFormData) => {
@@ -132,10 +58,26 @@ const SignUp: React.FC = () => {
       try {
         formRef.current?.setErrors({})
 
-        if (!validations(data)) {
-          setLoading(false)
-          return
-        }
+        const schema = Yup.object().shape({
+          name: Yup.string().min(
+            6,
+            'Nome deve possuir pelo menos 6 caracteres',
+          ),
+          username: Yup.string()
+            .min(6, 'Nome de usuário deve possuir pelo menos 6 caracteres')
+            .max(20, 'Nome de usuário deve possuir no máximo 20 caracteres'),
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('E-mail inválido'),
+          password: Yup.string().required('Senha obrigatória'),
+          repeatPassword: Yup.string().required(
+            'Campo repetir senha obrigatória',
+          ),
+        })
+
+        await schema.validate(data, {
+          abortEarly: false,
+        })
 
         const responseUsers = await api.get('users.json')
         const users = responseUsers.data
@@ -150,6 +92,11 @@ const SignUp: React.FC = () => {
           return
         }
 
+        if (data.password !== data.repeatPassword) {
+          Alert.alert('Erro', 'Senhas não coincidem')
+          return
+        }
+
         const response = await axios.post(
           `${AUTH_BASE_URL}/signupNewUser?key=${API_KEY}`,
           {
@@ -161,18 +108,9 @@ const SignUp: React.FC = () => {
 
         if (response.data.localId) {
           await api.put(`/users/${response.data.localId}.json`, {
-            username: data.username.trim(),
-            college: data.college,
-            isModerator: false,
-          })
-
-          await api.put(`/usersprivate/${response.data.localId}.json`, {
             name: data.name,
-            occupation: data.occupation,
-            city: data.city,
-            college: data.college,
-            birthday,
-            gender,
+            username: data.username.trim(),
+            isModerator: false,
           })
         }
 
@@ -183,12 +121,22 @@ const SignUp: React.FC = () => {
 
         navigation.goBack()
       } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+
+          formRef.current?.setErrors(errors)
+
+          setLoading(false)
+
+          return
+        }
+
         Alert.alert('Erro no cadastro', err.message)
       }
 
       setLoading(false)
     },
-    [navigation, validations, gender, birthday],
+    [navigation],
   )
 
   return (
@@ -240,80 +188,6 @@ const SignUp: React.FC = () => {
                 name="email"
                 icon="no-icon"
                 placeholder="E-mail"
-              />
-
-              <PickerContainer>
-                <Picker
-                  selectedValue={gender}
-                  onValueChange={(genderValue) => {
-                    setGender(genderValue)
-                  }}
-                >
-                  <Picker.Item label="Selecione seu sexo" value={null} />
-                  <Picker.Item label="Masculino" value="Masculino" />
-                  <Picker.Item label="Feminino" value="Feminino" />
-                </Picker>
-              </PickerContainer>
-
-              <TextInputMaskContainer>
-                <TextInputMask
-                  type="datetime"
-                  options={{ format: 'DD/MM/YYYY' }}
-                  value={birthday}
-                  placeholder="Data de Nascimento"
-                  placeholderTextColor="#666360"
-                  onChangeText={(masked) => {
-                    setBirthday(masked)
-                  }}
-                />
-              </TextInputMaskContainer>
-
-              <Input
-                maxLength={50}
-                ref={cityInputRef}
-                autoCapitalize="words"
-                name="city"
-                icon="no-icon"
-                placeholder="Cidade/UF"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  collegeInputRef.current?.focus()
-                }}
-              />
-
-              <PickerContainer>
-                <Picker
-                  selectedValue={occupation}
-                  onValueChange={(occupationValue) => {
-                    setOccupation(occupationValue)
-                  }}
-                >
-                  <Picker.Item
-                    label="Qual opção você se encaixa?"
-                    value={null}
-                  />
-                  <Picker.Item
-                    label="Professor de Odontologia"
-                    value="Professor de Odontologia"
-                  />
-                  <Picker.Item
-                    label="Aluno de Odontologia"
-                    value="Aluno de Odontologia"
-                  />
-                  <Picker.Item label="Outro" value="Outro" />
-                </Picker>
-              </PickerContainer>
-
-              <Input
-                maxLength={100}
-                ref={collegeInputRef}
-                name="college"
-                icon="no-icon"
-                placeholder="Instituição (caso estudante)"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  passwordInputRef.current?.focus()
-                }}
               />
 
               <Input

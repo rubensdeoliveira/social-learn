@@ -259,7 +259,7 @@ const AddQuestion: React.FC = () => {
               <Picker.Item label="Música" value="Música" />
               <Picker.Item label="Ciência" value="Ciência" />
               <Picker.Item label="Entretenimento" value="Entretenimento" />
-              <Picker.Item label="Curiosidades" value="Curiosidades" />
+              <Picker.Item label="Programação" value="Programação" />
               <Picker.Item label="Mundo Geek" value="Mundo Geek" />
             </Picker>
           </PickerContainer>
