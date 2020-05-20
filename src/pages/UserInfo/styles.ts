@@ -38,10 +38,3 @@ export const Username = styled.Text`
   text-align: center;
   color: #000;
 `
-
-export const College = styled.Text`
-  font-size: 25px;
-  font-family: 'Poppins-Regular';
-  text-align: center;
-  color: #000;
-`

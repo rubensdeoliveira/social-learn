@@ -19,19 +19,17 @@ import api from '../../services/api'
 
 interface EditInfoFormData {
   username: string
-  college?: string
 }
 
 const EditInfo: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   const formRef = useRef<FormHandles>(null)
-  const collegeInputRef = useRef<TextInput>(null)
   const usernameInputRef = useRef<TextInput>(null)
 
   const navigation = useNavigation()
   const { user, token, modifyUser } = useAuth()
-  const initialData = { username: user.username, college: user.college }
+  const initialData = { username: user.username }
 
   const handleChangeInfo = useCallback(
     async (data: EditInfoFormData) => {
@@ -70,13 +68,11 @@ const EditInfo: React.FC = () => {
 
         await api.patch(`users/${user.id}.json?auth=${token}`, {
           username: data.username.trim(),
-          college: data.college,
         })
 
         await modifyUser({
           ...user,
           username: data.username.trim(),
-          college: data.college,
         })
 
         Alert.alert('Sucesso', 'Usuário alterado com sucesso')
@@ -121,18 +117,6 @@ const EditInfo: React.FC = () => {
               name="username"
               icon="no-icon"
               placeholder="Username"
-              returnKeyType="next"
-              onSubmitEditing={() => {
-                collegeInputRef.current?.focus()
-              }}
-            />
-
-            <Input
-              maxLength={100}
-              ref={collegeInputRef}
-              name="college"
-              icon="no-icon"
-              placeholder="Instituição"
               returnKeyType="send"
               onSubmitEditing={() => {
                 formRef.current?.submitForm()

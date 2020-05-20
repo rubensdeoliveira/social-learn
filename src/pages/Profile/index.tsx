@@ -7,7 +7,6 @@ import {
   Container,
   Image,
   Username,
-  College,
   Edit,
   EditText,
   SaveButton,
@@ -79,7 +78,6 @@ const Profile: React.FC = () => {
         <EditText>Alterar foto</EditText>
       </Edit>
       <Username>{user.username}</Username>
-      {user && user.college ? <College>{user.college}</College> : null}
       <Edit
         onPress={() => {
           navigation.navigate('EditInfo')

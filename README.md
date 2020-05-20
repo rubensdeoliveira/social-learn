@@ -45,6 +45,7 @@ Social Learn is an android/ios application that I created to put my knowledge of
 ## Getting started
 
 - Clone project > enter the project folder
+- Update src > env.example.js with correct values
 - run `yarn`
 - run `yarn android`
 

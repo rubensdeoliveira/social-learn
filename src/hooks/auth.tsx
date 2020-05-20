@@ -13,10 +13,6 @@ import { AUTH_BASE_URL, API_KEY, REFRESH_TOKEN_URL } from '../env.js'
 
 interface UserData {
   id: string
-  birthday: string
-  city: string
-  college: string
-  gender: string
   image: string
   isModerator: boolean
   name: string
